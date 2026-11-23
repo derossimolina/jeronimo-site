@@ -1,0 +1,18 @@
+# Fontes que o ferramentas/sincronizar.py replica para o site.
+# A cada execução o script lê os feeds e cria ou atualiza os arquivos em content/.
+# Arquivos sem `gerado: true` no front matter são seus e nunca são alterados.
+max_itens: 60
+
+substack:                       # newsletter e, se houver áudio, podcast
+  - host: jeronimomolina.substack.com
+    marca: jeronimo
+  - host: contextoanalise.substack.com   # arquivo da Contexto (marca até 30/11/2026)
+    marca: contexto
+
+podcast_feeds: []               # feeds RSS de podcast fora do Substack: [{url: ..., marca: jeronimo}]
+
+youtube:                        # canal por @handle (o id UC... é resolvido sozinho) ou channel_id
+  - handle: jeronimomolina
+    marca: jeronimo
+  # - handle: contextoanalise
+  #   marca: contexto

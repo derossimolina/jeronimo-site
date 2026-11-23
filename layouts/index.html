@@ -1,0 +1,50 @@
+{{ define "main" }}
+<section class="heroi">
+  <div class="caixa">
+    <p class="rot">Jerônimo de Rossi Molina · analista político</p>
+    <h1>{{ site.Params.tagline }}</h1>
+    <p class="lede">Newsletter, podcast e vídeos. O fato e o documento vêm primeiro; a posição vem depois, no título, curta e sustentada.</p>
+    <div class="acoes">
+      <a class="btn btn-prim" href="{{ site.Params.newsletter }}" rel="noopener">Assine a newsletter</a>
+      <a class="btn btn-sec" href="{{ "/nossa-linha-editorial/" | relURL }}">Leia a linha editorial</a>
+    </div>
+  </div>
+</section>
+
+{{- $news := where site.RegularPages "Section" "newsletter" }}
+{{- $pod := where site.RegularPages "Section" "podcast" }}
+{{- $vid := where site.RegularPages "Section" "videos" }}
+
+<section class="bloco">
+  <div class="caixa">
+    <div class="bloco-topo"><h2>Últimas análises</h2><a class="txt" href="{{ "/newsletter/" | relURL }}">Ver todas</a></div>
+    {{- if $news }}
+    <div class="grade">
+      {{- range $i, $p := first 3 $news }}{{ partial "cartao.html" (dict "page" $p "destaque" (eq $i 0)) }}{{ end }}
+    </div>
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" "Nenhuma análise publicada aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
+    {{- end }}
+  </div>
+</section>
+
+<section class="bloco">
+  <div class="caixa">
+    <div class="bloco-topo"><h2>Em vídeo e áudio</h2><a class="txt" href="{{ "/videos/" | relURL }}">Ver vídeos</a></div>
+    {{- $midia := first 3 (sort (union $vid $pod) "Date" "desc") }}
+    {{- if $midia }}
+    <div class="grade">{{ range $midia }}{{ partial "cartao.html" (dict "page" .) }}{{ end }}</div>
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" "Nenhum vídeo ou episódio publicado aqui ainda." "link" "Ver o canal no YouTube" "url" "https://www.youtube.com/@jeronimomolina") }}
+    {{- end }}
+  </div>
+</section>
+
+<section class="bloco">
+  <div class="caixa estreita">
+    <h2>Como trabalhamos</h2>
+    <p>Toda peça tem fato com fonte, a posição à vista e o erro corrigido em até 24 horas. A página de transparência diz quem escreve, de onde escreve, quem paga e o que fazemos quando erramos.</p>
+    <p><a class="txt" href="{{ "/nossa-linha-editorial/" | relURL }}">Nossa linha editorial</a></p>
+  </div>
+</section>
+{{ end }}

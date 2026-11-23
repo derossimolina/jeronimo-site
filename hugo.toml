@@ -1,0 +1,38 @@
+baseURL = "https://jeronimo.caxias.br/"
+title = "jeronimo molina"
+locale = "pt-BR"
+defaultContentLanguage = "pt"
+copyright = "© 2026 J. de Rossi Molina Ltda"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+timeZone = "America/Sao_Paulo"
+
+[pagination]
+  pagerSize = 12
+
+[params]
+  description = "Análise política com fato, fonte e posição. Newsletter, podcast e vídeos de Jerônimo de Rossi Molina."
+  tagline = "Análise política com fato, fonte e posição."
+  newsletter = "https://jeronimomolina.substack.com"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 2
+
+[permalinks.page]
+  newsletter = "/newsletter/:slug/"
+  podcast = "/podcast/:slug/"
+  videos = "/videos/:slug/"
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+[sitemap]
+  changefreq = "weekly"
+
+[minify]
+  minifyOutput = true

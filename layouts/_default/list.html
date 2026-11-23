@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="bloco">
+  <div class="caixa">
+    <p class="rot">{{ .Title }}</p>
+    <h1 class="h1-menor">{{ with .Params.titulo_pagina }}{{ . }}{{ else }}{{ .Title }}{{ end }}</h1>
+    {{ with .Content }}<div class="prosa lede">{{ . }}</div>{{ end }}
+    {{- $pag := .Paginator }}
+    {{- if $pag.Pages }}
+    <div class="grade">{{ range $pag.Pages }}{{ partial "cartao.html" (dict "page" .) }}{{ end }}</div>
+    {{- if gt $pag.TotalPages 1 }}
+    <nav class="paginas" aria-label="Páginas">
+      {{ if $pag.HasPrev }}<a class="txt" href="{{ $pag.Prev.URL }}">Anteriores</a>{{ end }}
+      <span class="dado">Página {{ $pag.PageNumber }} de {{ $pag.TotalPages }}</span>
+      {{ if $pag.HasNext }}<a class="txt" href="{{ $pag.Next.URL }}">Mais antigas</a>{{ end }}
+    </nav>
+    {{- end }}
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" (.Params.vazio | default "Nada publicado aqui ainda.") "link" (.Params.vazio_link | default "Ver a newsletter") "url" (.Params.vazio_url | default site.Params.newsletter)) }}
+    {{- end }}
+  </div>
+</section>
+{{ end }}

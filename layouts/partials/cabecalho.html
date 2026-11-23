@@ -1,0 +1,12 @@
+<header class="topo">
+  <div class="caixa topo-in">
+    <a class="marca" href="{{ "/" | relURL }}" aria-label="jeronimo molina, página inicial">{{ partial "lockup.html" . }}</a>
+    <nav class="menu" aria-label="Principal">
+      {{- $atual := . }}
+      {{- $base := "" }}{{ with .File }}{{ $base = .BaseFileName }}{{ end }}
+      {{- range slice (dict "t" "Newsletter" "u" "/newsletter/" "s" "newsletter") (dict "t" "Podcast" "u" "/podcast/" "s" "podcast") (dict "t" "Vídeos" "u" "/videos/" "s" "videos") (dict "t" "Linha editorial" "u" "/nossa-linha-editorial/" "s" "nossa-linha-editorial") (dict "t" "Sobre" "u" "/sobre/" "s" "sobre") }}
+      <a href="{{ .u | relURL }}"{{ if or (eq $atual.Section .s) (eq $base .s) }} aria-current="page"{{ end }}>{{ .t }}</a>
+      {{- end }}
+    </nav>
+  </div>
+</header>

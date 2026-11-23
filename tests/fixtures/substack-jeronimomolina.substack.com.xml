@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel><title>Jeronimo Molina</title>
+<item><title>O ajuste fiscal e a conta que chega ao Orçamento</title><link>https://jeronimomolina.substack.com/p/o-ajuste-fiscal-e-a-conta</link><pubDate>Mon, 30 Nov 2026 11:00:00 GMT</pubDate>
+<description>A votação de 12/11 mostrou o governo dividido; a disputa agora migra para o Orçamento de 2027.</description>
+<dc:creator>Jerônimo de Rossi Molina</dc:creator>
+<content:encoded><![CDATA[<div class="captioned-image-container"><figure><img src="https://substackcdn.com/image/fetch/x.jpg" alt="Plenário do Senado" width="1456" height="819"><figcaption>Plenário do Senado. Foto: Agência Senado.</figcaption></figure></div>
+<p>O Senado aprovou o PLP por <strong>45 a 31</strong>. Veja o <a href="https://www12.senado.leg.br/x">documento</a>.</p>
+<h2>O que mudou</h2><ul><li>Regra fiscal</li><li>Teto</li></ul>
+<div class="subscription-widget-wrap"><div class="subscription-widget"><form><input type="email"><button>Assine</button></form></div></div>
+<script>alert(1)</script><p><a class="button primary" href="https://x">Compartilhar</a></p>
+<img src="https://substack.com/pixel.gif" width="1" height="1"><blockquote>Fato com fonte.</blockquote>]]></content:encoded>
+<enclosure url="https://substackcdn.com/image/fetch/capa.jpg" type="image/jpeg" length="0"/></item>
+<item><title>Episódio 1: conversa sobre o Orçamento</title><link>https://jeronimomolina.substack.com/p/episodio-1-orcamento</link><pubDate>Tue, 01 Dec 2026 11:00:00 GMT</pubDate>
+<description>Primeiro episódio do podcast.</description><content:encoded><![CDATA[<p>Notas do episódio com <em>fontes</em>.</p>]]></content:encoded>
+<enclosure url="https://api.substack.com/feed/podcast/1.mp3" type="audio/mpeg" length="123"/><itunes:duration>00:31:20</itunes:duration></item>
+</channel></rss>

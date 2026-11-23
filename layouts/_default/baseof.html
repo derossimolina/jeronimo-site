@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- $titulo := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
+<title>{{ $titulo }}</title>
+{{- $desc := cond (ne .Description "") .Description site.Params.description }}
+<meta name="description" content="{{ $desc }}">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:type" content="{{ cond .IsHome "website" "article" }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $titulo }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="pt_BR">
+{{- with .Params.imagem }}<meta property="og:image" content="{{ . }}">{{ end }}
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+{{- range .AlternativeOutputFormats }}<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">{{ end }}
+<link rel="preload" href="{{ "fonts/manrope-700.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/inter-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{- $css := resources.Get "css/site.css" | resources.Minify | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+</head>
+<body class="pg-{{ cond .IsHome "home" (or .Section "pagina") }}">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+{{ partial "cabecalho.html" . }}
+<main id="conteudo" tabindex="-1">
+{{ block "main" . }}{{ end }}
+</main>
+{{ partial "rodape.html" . }}
+</body>
+</html>

@@ -1,0 +1,12 @@
+{{ define "main" }}
+<article class="bloco artigo">
+  <div class="caixa estreita">
+    {{- if .Section }}<p class="rot"><a href="{{ (site.GetPage .Section).RelPermalink }}">{{ (site.GetPage .Section).Title }}</a></p>{{ else }}<p class="rot">{{ .Params.rotulo | default "Jeronimo Molina" }}</p>{{ end }}
+    <h1 class="h1-menor">{{ .Title }}</h1>
+    {{- if .Date }}{{ if not .Date.IsZero }}<p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time>{{ if eq .Params.marca "contexto" }} · Contexto, arquivo{{ end }}</p>{{ end }}{{ end }}
+    {{- if .Params.toc }}{{ with .TableOfContents }}<nav class="indice" aria-label="Nesta página"><p class="rot">Nesta página</p>{{ . }}</nav>{{ end }}{{ end }}
+    <div class="prosa{{ if .Params.lede }} com-lede{{ end }}">{{ .Content }}</div>
+    {{- with .Params.origem }}<p class="origem dado">Publicado originalmente em <a href="{{ . }}" rel="noopener">{{ . | replaceRE "^https?://" "" }}</a></p>{{ end }}
+  </div>
+</article>
+{{ end }}

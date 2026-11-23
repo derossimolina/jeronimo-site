@@ -1,0 +1,33 @@
+{{ define "main" }}
+<article class="bloco artigo">
+  <div class="caixa estreita">
+    <p class="rot"><a href="{{ "/videos/" | relURL }}">Vídeos</a></p>
+    <h1 class="h1-menor">{{ .Title }}</h1>
+    <p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
+    {{- with .Params.youtube }}
+    <div class="video" data-id="{{ . }}">
+      <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener" class="video-capa">
+        <img src="https://i.ytimg.com/vi/{{ . }}/maxresdefault.jpg" alt="Capa do vídeo: {{ $.Title }}" width="1280" height="720" loading="lazy" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg'">
+        <span class="video-play">Assistir</span>
+      </a>
+    </div>
+    {{- end }}
+    <div class="prosa">{{ with .Description }}<p>{{ . }}</p>{{ end }}{{ .Content }}</div>
+    {{- with .Params.origem }}<p><a class="txt" href="{{ . }}" rel="noopener">Ver no YouTube</a></p>{{ end }}
+  </div>
+</article>
+<script>
+document.querySelectorAll('.video').forEach(function (v) {
+  v.querySelector('a').addEventListener('click', function (e) {
+    e.preventDefault();
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + v.dataset.id + '?autoplay=1&rel=0';
+    f.title = 'Vídeo';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture';
+    f.allowFullscreen = true;
+    v.replaceChildren(f);
+    f.focus();
+  });
+});
+</script>
+{{ end }}

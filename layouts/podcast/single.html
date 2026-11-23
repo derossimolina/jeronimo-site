@@ -1,0 +1,12 @@
+{{ define "main" }}
+<article class="bloco artigo">
+  <div class="caixa estreita">
+    <p class="rot"><a href="{{ "/podcast/" | relURL }}">Podcast</a></p>
+    <h1 class="h1-menor">{{ .Title }}</h1>
+    <p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time>{{ with .Params.duracao }} · {{ . }}{{ end }}</p>
+    {{- with .Params.audio }}<audio class="player" controls preload="none" src="{{ . }}">Seu navegador não toca áudio. <a href="{{ . }}">Baixe o episódio</a>.</audio>{{ end }}
+    <div class="prosa">{{ .Content }}</div>
+    {{- with .Params.origem }}<p class="origem dado">Publicado originalmente em <a href="{{ . }}" rel="noopener">{{ . | replaceRE "^https?://" "" }}</a></p>{{ end }}
+  </div>
+</article>
+{{ end }}

@@ -10,5 +10,5 @@ substack:                       # newsletter e, se houver áudio, podcast
 podcast_feeds: []               # feeds RSS de podcast fora do Substack: [{url: ..., marca: jeronimo}]
 
 youtube:                        # canal por @handle (o id UC... é resolvido sozinho) ou channel_id
-  - handle: jeronimomolina
+  - handle: jderossimolina
     marca: jeronimo

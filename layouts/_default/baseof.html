@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ site.Language.LanguageCode }}" data-tema="escuro">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https: data:; media-src https:; font-src 'self'; frame-src https://www.youtube-nocookie.com https://open.spotify.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+{{- /* Tema: escuro é o padrão da marca; a escolha da pessoa fica salva no navegador. Script externo e síncrono
+       (a CSP não aceita script inline) para aplicar o tema antes da primeira pintura. */}}
+{{- $tema := resources.Get "js/tema.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $tema.RelPermalink }}" integrity="{{ $tema.Data.Integrity }}"></script>
 {{- $titulo := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
 <title>{{ $titulo }}</title>
 {{- $desc := cond (ne .Description "") .Description site.Params.description }}
@@ -16,7 +20,8 @@
 <meta property="og:title" content="{{ $titulo }}">
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:url" content="{{ .Permalink }}">
-<meta property="og:locale" content="pt_BR">
+<meta property="og:locale" content="{{ replace site.Language.LanguageCode "-" "_" }}">
+{{- range .AllTranslations }}<link rel="alternate" hreflang="{{ .Language.LanguageCode }}" href="{{ .Permalink }}">{{ end }}
 {{- with .Params.imagem }}<meta property="og:image" content="{{ . }}">{{ end }}
 <meta name="twitter:card" content="{{ if .Params.imagem }}summary_large_image{{ else }}summary{{ end }}">
 <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
@@ -27,11 +32,13 @@
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 </head>
 <body class="pg-{{ cond .IsHome "home" (or .Section "pagina") }}">
-<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<a class="pular" href="#conteudo">{{ i18n "pular" }}</a>
 {{ partial "cabecalho.html" . }}
 <main id="conteudo" tabindex="-1">
 {{ block "main" . }}{{ end }}
 </main>
 {{ partial "rodape.html" . }}
+{{- $ui := resources.Get "js/interface.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $ui.RelPermalink }}" integrity="{{ $ui.Data.Integrity }}" defer></script>
 </body>
 </html>

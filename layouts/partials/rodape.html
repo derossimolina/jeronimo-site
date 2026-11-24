@@ -1,11 +1,11 @@
 <footer class="rodape">
   <div class="caixa rodape-in">
     <p class="peq dado">{{ site.Copyright }}</p>
-    <ul class="redes" aria-label="Redes e feed">
+    <ul class="redes" aria-label="{{ i18n "redes" }}">
       {{- range site.Data.redes }}
       <li><a href="{{ .url }}" rel="me noopener" aria-label="{{ .nome }}" title="{{ .nome }}">{{ partial (printf "icones/%s.svg" .icone) . | safeHTML }}</a></li>
       {{- end }}
-      <li><a href="{{ "/index.xml" | relURL }}" aria-label="Feed RSS" title="Feed RSS">{{ partial "icones/rss.svg" . | safeHTML }}</a></li>
+      <li><a href="{{ "/index.xml" | relLangURL }}" aria-label="{{ i18n "feedRss" }}" title="{{ i18n "feedRss" }}">{{ partial "icones/rss.svg" . | safeHTML }}</a></li>
     </ul>
   </div>
 </footer>

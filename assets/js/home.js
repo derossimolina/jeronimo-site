@@ -196,7 +196,7 @@ function iniciarCena(canvas) {
   const agendar = () => { if (!pedido) pedido = requestAnimationFrame(quadro); };
   if (!reduzido) addEventListener('scroll', agendar, { passive: true });
   addEventListener('resize', agendar, { passive: true });
-  matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { pintar(); agendar(); });
+  new MutationObserver(() => { pintar(); agendar(); }).observe(raiz, { attributes: true, attributeFilter: ['data-tema'] });
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); raiz.classList.remove('webgl'); });
   canvas.addEventListener('webglcontextrestored', () => { raiz.classList.add('webgl'); agendar(); });
 

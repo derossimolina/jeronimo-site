@@ -4,18 +4,21 @@
     <p class="rot">{{ .Title }}</p>
     <h1 class="h1-menor">{{ with .Params.titulo_pagina }}{{ . }}{{ else }}{{ .Title }}{{ end }}</h1>
     {{ with .Content }}<div class="prosa lede">{{ . }}</div>{{ end }}
-    {{- $pag := .Paginator }}
+    {{- /* Na versão em inglês, a seção lista as páginas em português (o conteúdo só existe nesse idioma). */}}
+{{- $paginas := .Pages }}
+{{- if ne site.Language.Lang "pt" }}{{ with $.Sites.Default.GetPage .Path }}{{ $paginas = .Pages }}{{ end }}{{ end }}
+{{- $pag := .Paginate $paginas }}
     {{- if $pag.Pages }}
-    <div class="coluna">{{ range $pag.Pages }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}</div>
+    <div class="coluna">{{ range $pag.Pages }}{{ partial "trabalho.html" (dict "page" . "nivel" 2) }}{{ end }}</div>
     {{- if gt $pag.TotalPages 1 }}
-    <nav class="paginas" aria-label="Páginas">
-      {{ if $pag.HasPrev }}<a class="txt" href="{{ $pag.Prev.URL }}">Mais recentes</a>{{ end }}
-      <span class="dado">Página {{ $pag.PageNumber }} de {{ $pag.TotalPages }}</span>
-      {{ if $pag.HasNext }}<a class="txt" href="{{ $pag.Next.URL }}">Mais antigas</a>{{ end }}
+    <nav class="paginas" aria-label="{{ i18n "paginas" }}">
+      {{ if $pag.HasPrev }}<a class="txt" href="{{ $pag.Prev.URL }}">{{ i18n "maisRecentes" }}</a>{{ end }}
+      <span class="dado">{{ i18n "paginaDe" (dict "Atual" $pag.PageNumber "Total" $pag.TotalPages) }}</span>
+      {{ if $pag.HasNext }}<a class="txt" href="{{ $pag.Next.URL }}">{{ i18n "maisAntigas" }}</a>{{ end }}
     </nav>
     {{- end }}
     {{- else }}
-    {{ partial "vazio.html" (dict "texto" (.Params.vazio | default "Nada publicado aqui ainda.") "link" (.Params.vazio_link | default "Ver a newsletter") "url" (.Params.vazio_url | default site.Params.newsletter)) }}
+    {{ partial "vazio.html" (dict "texto" (.Params.vazio | default (i18n "nadaAqui")) "link" (.Params.vazio_link | default (i18n "verNewsletter")) "url" (.Params.vazio_url | default site.Params.newsletter)) }}
     {{- end }}
   </div>
 </section>

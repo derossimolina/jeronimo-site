@@ -1,7 +1,8 @@
 {{ define "main" }}
 <section class="bloco"><div class="caixa estreita">
-  <p class="rot">Erro 404</p>
-  <h1 class="h1-menor">Esta página não existe</h1>
-  <p>O endereço pode ter mudado. Volte para <a href="{{ "/" | relURL }}">a página inicial</a> ou veja <a href="{{ "/newsletter/" | relURL }}">as análises</a>.</p>
+  <p class="rot">{{ i18n "erro404" }}</p>
+  <h1 class="h1-menor">{{ i18n "naoExiste" }}</h1>
+  <p>{{ i18n "naoExisteTexto" }}</p>
+  <p><a href="{{ "/" | relLangURL }}">{{ i18n "voltarInicio" }}</a> · <a href="{{ "/newsletter/" | relLangURL }}">{{ i18n "verAnalises" }}</a></p>
 </div></section>
 {{ end }}

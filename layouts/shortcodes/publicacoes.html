@@ -1,0 +1,45 @@
+{{- /* Artigos publicados (data/publicacoes.yaml) em cards empilhados. Sem JS: lista aberta. Com JS: pilha;
+       o card clicado sobe e mostra os detalhes (um por vez). Botão com aria-expanded. */ -}}
+<div class="artigos" lang="pt-BR">
+  <h3 class="artigos-titulo" lang="{{ site.Language.LanguageCode }}">{{ i18n "artigosTitulo" }}</h3>
+  <p class="artigos-ajuda" lang="{{ site.Language.LanguageCode }}" data-so-js hidden>{{ i18n "artigosAjuda" }}</p>
+  <ol class="pilha" data-pilha>
+    {{- range $i, $a := site.Data.publicacoes }}
+    {{- $id := printf "artigo-%d" $i }}
+    {{- /* Referência ABNT NBR 6023:2018 */ -}}
+    {{- $nomes := slice }}
+    {{- range $a.autores }}{{ $p := split (trim . " ") " " }}{{ $nomes = $nomes | append (printf "%s, %s" (upper (index $p (sub (len $p) 1))) (delimit (first (sub (len $p) 1) $p) " ")) }}{{ end }}
+    {{- $resto := slice }}
+    {{- with $a.local }}{{ $resto = $resto | append . }}{{ end }}
+    {{- with $a.volume }}{{ $resto = $resto | append (printf "v. %s" .) }}{{ end }}
+    {{- with $a.numero }}{{ $resto = $resto | append (printf "n. %s" .) }}{{ end }}
+    {{- with $a.paginas }}{{ $resto = $resto | append (printf "p. %s" .) }}{{ end }}
+    {{- $resto = $resto | append (printf "%v" $a.ano) }}
+    <li class="pilha-item">
+      <article class="artigo-card">
+        <h4 class="artigo-cab">
+          <button class="artigo-botao" type="button" aria-expanded="true" aria-controls="{{ $id }}">
+            <span class="dado">{{ $a.periodico_curto }} · {{ $a.ano }}</span>
+            <span class="artigo-nome">{{ $a.titulo }}</span>
+            <svg class="ico artigo-seta" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </h4>
+        <div class="artigo-detalhe" id="{{ $id }}">
+          <div class="artigo-detalhe-in">
+            <dl class="ficha">
+              <dt lang="{{ site.Language.LanguageCode }}">{{ i18n "autoria" }}</dt><dd>{{ delimit $a.autores "; " }}</dd>
+              <dt lang="{{ site.Language.LanguageCode }}">{{ i18n "periodico" }}</dt><dd>{{ $a.periodico }}</dd>
+              <dt lang="{{ site.Language.LanguageCode }}">{{ i18n "ano" }}</dt><dd>{{ $a.ano }}{{ with $a.volume }} · v. {{ . }}{{ end }}{{ with $a.numero }} · n. {{ . }}{{ end }}{{ with $a.paginas }} · p. {{ . }}{{ end }}</dd>
+              {{- with $a.doi }}<dt>DOI</dt><dd><a href="https://doi.org/{{ . }}" rel="noopener">{{ . }}</a></dd>{{ end }}
+            </dl>
+            {{- with $a.palavras_chave }}<p class="artigo-chaves">{{ range . }}<span class="etq">{{ . }}</span>{{ end }}</p>{{ end }}
+            <p class="rot" lang="{{ site.Language.LanguageCode }}">{{ i18n "comoCitar" }}</p>
+            <p class="artigo-abnt">{{ delimit $nomes "; " }}. {{ $a.titulo }}. <strong>{{ $a.periodico }}</strong>, {{ delimit $resto ", " }}.{{ with $a.doi }} DOI: {{ . }}.{{ end }}</p>
+            {{- with $a.url }}<p><a class="txt" href="{{ . }}" rel="noopener" lang="{{ site.Language.LanguageCode }}">{{ i18n "lerArtigo" }}</a></p>{{ end }}
+          </div>
+        </div>
+      </article>
+    </li>
+    {{- end }}
+  </ol>
+</div>

@@ -3,7 +3,7 @@
 {{- $p := .p }}
 <div class="capa{{ if .larga }} capa-larga{{ end }}" aria-hidden="true">
   <div class="capa-topo">
-    <span class="capa-rot">Relatório{{ with .n }} · Nº {{ printf "%02d" . }}{{ end }}</span>
+    <span class="capa-rot">{{ i18n "relatorio" }}{{ with .n }} · {{ i18n "num" }} {{ printf "%02d" . }}{{ end }}</span>
     <span class="capa-data">{{ $p.Date.Format "02/01/2006" }}</span>
   </div>
   <svg class="capa-simbolo" viewBox="180 180 600 600" focusable="false">
@@ -14,6 +14,6 @@
   <div class="capa-pe">
     <svg class="capa-marca" viewBox="200 200 560 560" focusable="false"><path fill="currentColor" d="M370 200L200 370L200 595L595 200Z M200 760L590 760L760 590L760 200L645 200L200 645Z"/></svg>
     <span>jeronimo molina</span>
-    <span class="capa-fonte">Análise política</span>
+    <span class="capa-fonte">{{ i18n "analisePolitica" }}</span>
   </div>
 </div>

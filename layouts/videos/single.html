@@ -1,19 +1,19 @@
 {{ define "main" }}
 <article class="bloco artigo">
   <div class="caixa estreita">
-    <p class="rot"><a href="{{ "/videos/" | relURL }}">Vídeos</a></p>
+    <p class="rot"><a href="{{ "/videos/" | relLangURL }}">{{ i18n "videos" }}</a></p>
     <h1 class="h1-menor">{{ .Title }}</h1>
     <p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
     {{- with .Params.youtube }}
     <div class="video" data-id="{{ . }}">
       <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener noreferrer" class="video-capa">
-        <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="Capa do vídeo: {{ $.Title }}" width="480" height="360" loading="lazy">
-        <span class="video-play">Assistir</span>
+        <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="{{ i18n "capaVideo" }} {{ $.Title }}" width="480" height="360" loading="lazy">
+        <span class="video-play">{{ i18n "assistir" }}</span>
       </a>
     </div>
     {{- end }}
     <div class="prosa">{{ with .Description }}<p>{{ . }}</p>{{ end }}{{ .Content }}</div>
-    {{- with .Params.origem }}<p><a class="txt" href="{{ . }}" rel="noopener">Ver no YouTube</a></p>{{ end }}
+    {{- with .Params.origem }}<p><a class="txt" href="{{ . }}" rel="noopener">{{ i18n "verNoYoutube" }}</a></p>{{ end }}
   </div>
 </article>
 {{- $js := resources.Get "js/video.js" | resources.Minify | resources.Fingerprint }}

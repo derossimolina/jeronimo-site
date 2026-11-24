@@ -1,9 +1,10 @@
 {{- /* Item de lista no estilo de portfólio: título, tipo e ano na mesma linha, resumo curto abaixo. Contexto: dict page. */ -}}
 {{- $p := .page }}
+{{- $n := .nivel | default 3 }}
 {{- $rot := cond (eq $p.Section "podcast") "Podcast" (cond (eq $p.Section "videos") "Vídeo" "Newsletter") }}
 <article class="trabalho">
   <div class="trabalho-topo">
-    <h3><a class="cartao-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+    <h{{ $n }}><a class="cartao-link" href="{{ $p.RelPermalink }}"{{ if ne site.Language.Lang "pt" }} hreflang="pt-BR" lang="pt-BR"{{ end }}>{{ $p.Title }}</a></h{{ $n }}>
     <p class="dado">{{ $rot }} · <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006" }}</time>{{ with $p.Params.duracao }} · {{ . }}{{ end }}</p>
   </div>
   {{- with $p.Description }}<p class="resumo">{{ . }}</p>{{ end }}

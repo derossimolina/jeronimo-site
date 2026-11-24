@@ -1,0 +1,36 @@
+# Artigos em periódico de Jerônimo de Rossi Molina (conferidos em 24/11/2026 no Crossref, no OpenAlex e no site das revistas).
+# Ordem: mais recente primeiro. Os campos vazios ficam ocultos no card.
+- titulo: "A Democracia radical e plural como método de análise em Geopolítica Crítica"
+  autores: ["Jerônimo de Rossi Molina"]
+  periodico: "Hoplos – Revista de Estudos Estratégicos e Relações Internacionais (UFF)"
+  periodico_curto: "Hoplos (UFF)"
+  local: "Niterói"
+  ano: 2024
+  volume: "8"
+  numero: "15"
+  paginas: "50-68"
+  doi: ""
+  url: "https://periodicos.uff.br/hoplos/article/view/63796"
+  palavras_chave: ["Geopolítica crítica", "Democracia radical", "Agonismo"]
+- titulo: "O discurso gerencialista como prática estratégica em uma administração pública municipal"
+  autores: ["Jerônimo de Rossi Molina"]
+  periodico: "Gestão.org (UFPE)"
+  periodico_curto: "Gestão.org (UFPE)"
+  local: "Recife"
+  ano: 2024
+  volume: "22"
+  numero: "1"
+  paginas: ""
+  doi: "10.51359/1679-1827.2024.261614"
+  url: "https://periodicos.ufpe.br/revistas/index.php/gestaoorg/article/view/261614"
+- titulo: "Relação de empregos perante a Covid-19 no RS: uma análise de efeito causal e regressão"
+  autores: ["Catiane Borsatto", "Jerônimo de Rossi Molina", "Renan Isoton", "Rodrigo Bado", "Cíntia Paese Giacomello", "Fernanda Lazzari"]
+  periodico: "Revista Brasileira de Gestão e Inovação (UCS)"
+  periodico_curto: "RBGI (UCS)"
+  local: "Caxias do Sul"
+  ano: 2022
+  volume: "9"
+  numero: "3"
+  paginas: "101-123"
+  doi: "10.18226/23190639.v9n3.05"
+  url: "https://sou.ucs.br/etc/revistas/index.php/RBGI/article/view/9554"

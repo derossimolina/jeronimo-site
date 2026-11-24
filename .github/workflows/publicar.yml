@@ -7,39 +7,66 @@ on:
     - cron: "17 */3 * * *"      # a cada 3 horas: replica newsletter, podcast e vídeos
   workflow_dispatch:
 
+# Padrão sem privilégio. Cada job pede só o que usa.
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  publicar:
+  replicar:
+    # Único job que escreve no repositório. Ele lê texto de fora, então não recebe pages nem id-token.
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+    timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Testes
+        run: python3 tests/testa_sincronizar.py
 
       - name: Replicar newsletter, podcast e vídeos
-        run: |
-          pip install pyyaml
-          python3 ferramentas/sincronizar.py
+        run: python3 ferramentas/sincronizar.py
 
       - name: Guardar o conteúdo replicado no repositório
         run: |
           git config user.name "site-bot"
           git config user.email "site-bot@users.noreply.github.com"
           git add content
-          git diff --cached --quiet || (git commit -m "Conteúdo replicado das fontes" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Conteúdo replicado das fontes"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+  publicar:
+    needs: replicar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main            # pega também o conteúdo que o job anterior acabou de gravar
+          persist-credentials: false
 
       - uses: peaceiris/actions-hugo@v3
         with:
@@ -47,7 +74,7 @@ jobs:
           extended: true
 
       - name: Gerar o site
-        run: hugo --minify
+        run: hugo --minify --gc
 
       - uses: actions/upload-pages-artifact@v3
         with:

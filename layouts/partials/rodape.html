@@ -1,27 +1,14 @@
 <footer class="rodape">
-  <div class="caixa">
-    <div class="rodape-grade">
-      <div>
-        <span class="marca marca-p">{{ partial "lockup.html" . }}</span>
-        <p class="peq">{{ site.Params.tagline }}</p>
-      </div>
-      <div>
-        <h2 class="rot">Siga</h2>
-        <ul class="lista-simples">
-          {{- range hugo.Data.redes }}
-          <li><a href="{{ .url }}" rel="me noopener">{{ .nome }}</a></li>
-          {{- end }}
-        </ul>
-      </div>
-      <div>
-        <h2 class="rot">Site</h2>
-        <ul class="lista-simples">
-          <li><a href="{{ "/nossa-linha-editorial/" | relURL }}">Nossa linha editorial</a></li>
-          <li><a href="{{ "/sobre/" | relURL }}">Sobre</a></li>
-          <li><a href="{{ "/index.xml" | relURL }}">Feed RSS</a></li>
-        </ul>
-      </div>
-    </div>
-    <p class="peq dado">{{ site.Copyright }}. Fotos reais e creditadas; nunca imagem gerada por inteligência artificial.</p>
+  <div class="caixa rodape-in">
+    <p class="peq dado">{{ site.Copyright }}</p>
+    <ul>
+      {{- range site.Data.redes }}
+      <li><a href="{{ .url }}" rel="me noopener">{{ .nome }}</a></li>
+      {{- end }}
+      <li><a href="{{ "/nossa-linha-editorial/" | relURL }}">Linha editorial</a></li>
+      <li><a href="{{ "/sobre/" | relURL }}">Sobre</a></li>
+      <li><a href="{{ "/index.xml" | relURL }}">Feed RSS</a></li>
+      <li><a href="#conteudo">Voltar ao topo</a></li>
+    </ul>
   </div>
 </footer>

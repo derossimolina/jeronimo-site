@@ -6,8 +6,8 @@
     <p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
     {{- with .Params.youtube }}
     <div class="video" data-id="{{ . }}">
-      <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener" class="video-capa">
-        <img src="https://i.ytimg.com/vi/{{ . }}/maxresdefault.jpg" alt="Capa do vídeo: {{ $.Title }}" width="1280" height="720" loading="lazy" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg'">
+      <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener noreferrer" class="video-capa">
+        <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="Capa do vídeo: {{ $.Title }}" width="480" height="360" loading="lazy">
         <span class="video-play">Assistir</span>
       </a>
     </div>
@@ -16,18 +16,6 @@
     {{- with .Params.origem }}<p><a class="txt" href="{{ . }}" rel="noopener">Ver no YouTube</a></p>{{ end }}
   </div>
 </article>
-<script>
-document.querySelectorAll('.video').forEach(function (v) {
-  v.querySelector('a').addEventListener('click', function (e) {
-    e.preventDefault();
-    var f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/' + v.dataset.id + '?autoplay=1&rel=0';
-    f.title = 'Vídeo';
-    f.allow = 'autoplay; encrypted-media; picture-in-picture';
-    f.allowFullscreen = true;
-    v.replaceChildren(f);
-    f.focus();
-  });
-});
-</script>
+{{- $js := resources.Get "js/video.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 {{ end }}

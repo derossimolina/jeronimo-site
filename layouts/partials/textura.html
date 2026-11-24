@@ -1,0 +1,12 @@
+{{- /* Textura geométrica do cartão de impacto (4.12): símbolo hachurado a 45°, quadrados e estrelas. Só acento e linha. */ -}}
+<svg class="textura" viewBox="100 120 800 760" role="presentation" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hachura" patternUnits="userSpaceOnUse" width="16" height="16" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="16" stroke="var(--acento)" stroke-width="3"/></pattern>
+    <pattern id="hachura-linha" patternUnits="userSpaceOnUse" width="16" height="16" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="16" stroke="var(--linha)" stroke-width="3"/></pattern>
+  </defs>
+  <path fill="url(#hachura)" stroke="var(--acento)" stroke-width="3" d="M370 200L200 370L200 595L595 200Z M200 760L590 760L760 590L760 200L645 200L200 645Z"/>
+  <rect x="790" y="640" width="90" height="90" fill="url(#hachura-linha)" stroke="var(--linha)" stroke-width="3"/>
+  <rect x="120" y="150" width="56" height="56" fill="url(#hachura-linha)" stroke="var(--linha)" stroke-width="3"/>
+  <path fill="var(--acento)" d="M820 220Q820 260 860 260Q820 260 820 300Q820 260 780 260Q820 260 820 220Z"/>
+  <path fill="var(--acento)" d="M150 800Q150 825 175 825Q150 825 150 850Q150 825 125 825Q150 825 150 800Z"/>
+</svg>

@@ -7,7 +7,7 @@ Site Hugo da marca **jeronimo molina**, no design system do repositório `design
 | Página | De onde vem |
 | --- | --- |
 | Início | Últimas análises, vídeos e episódios |
-| Newsletter | Substack (`jeronimomolina.substack.com`, mais o arquivo de `contextoanalise.substack.com`) |
+| Newsletter | Substack (`jeronimomolina.substack.com`) |
 | Podcast | Itens com áudio do Substack e, se houver, feeds de podcast |
 | Vídeos | Feed do canal do YouTube |
 | Nossa linha editorial, Sobre | Escritas à mão em `content/` |
@@ -16,16 +16,16 @@ Instagram, X, TikTok e LinkedIn não têm replicação automática (as plataform
 
 ## Como a replicação funciona
 
-`ferramentas/sincronizar.py` lê os feeds públicos e cria arquivos em `content/newsletter`, `content/podcast` e `content/videos`, com `gerado: true` no front matter. O que não tem essa marca é seu e nunca é alterado. O script não apaga nada e, se uma fonte falhar, segue com as outras. O HTML passa por uma lista de tags permitidas (sem script, iframe, formulário, botão de assinatura nem pixel de rastreio). As fontes ficam em `data/fontes.yaml`.
+`ferramentas/sincronizar.py` lê os feeds públicos e cria arquivos em `content/newsletter`, `content/podcast` e `content/videos`, com `gerado: true` no front matter. O que não tem essa marca é seu e nunca é alterado. O script não apaga nada e, se uma fonte falhar, segue com as outras. O HTML passa por `ferramentas/limpeza.py`: lista de tags permitidas (sem script, iframe, formulário, botão de assinatura nem pixel de rastreio), só links `http(s)`, `mailto` e internos, e `{{` neutralizado para o Hugo não executar shortcode vindo de fora. O script só aceita feeds `https` e limita a resposta a 10 MB. As fontes ficam em `data/fontes.yaml`.
 
-O workflow `.github/workflows/publicar.yml` roda a cada 3 horas e a cada push: replica, grava o conteúdo novo no repositório, gera o site e publica no GitHub Pages.
+O workflow `.github/workflows/publicar.yml` roda a cada 3 horas e a cada push, em dois jobs: `replicar` (roda os testes, replica e grava o conteúdo novo; é o único com permissão de escrita) e `publicar` (gera o site e publica no GitHub Pages, sem escrita no repositório).
 
 ## Rodar localmente
 
 ```
-pip install pyyaml
+pip install -r requirements.txt
 python3 ferramentas/sincronizar.py        # lê a rede
-python3 tests/testa_sincronizar.py        # teste offline
+python3 tests/testa_sincronizar.py        # teste offline (não escreve em content/)
 hugo server --buildFuture
 ```
 
@@ -40,3 +40,21 @@ hugo server --buildFuture
 ## Antes de ligar o canal do YouTube
 
 O handle `@jeronimomolina` vem da memória de redes de 23/11/2026. Se o canal usar outro nome, corrija `data/fontes.yaml`; o script descobre o `channel_id` sozinho.
+
+## Segurança
+
+- Cada página manda uma Content-Security-Policy por `<meta>` (sem script ou estilo inline; imagens e áudio só por https; iframe só do `youtube-nocookie.com`). O GitHub Pages não deixa configurar cabeçalhos HTTP, então a política vai no HTML.
+- `markup.goldmark.renderer.unsafe = true` é necessário para o HTML escrito à mão em `content/`. Por isso todo texto replicado passa pela limpeza antes de virar arquivo.
+- Actions e dependências são atualizadas pelo Dependabot (`.github/dependabot.yml`).
+
+## Estrutura
+
+```
+assets/        css e js (fingerprint + SRI)
+content/       páginas à mão e conteúdo replicado (gerado: true)
+data/          fontes.yaml, redes.yaml
+ferramentas/   sincronizar.py (rede, escrita) e limpeza.py (HTML seguro)
+layouts/       tema
+static/        fontes, favicon, CNAME
+tests/         testes offline e fixtures
+```

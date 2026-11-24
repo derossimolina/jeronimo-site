@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https: data:; media-src https:; font-src 'self'; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 {{- $titulo := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
 <title>{{ $titulo }}</title>
 {{- $desc := cond (ne .Description "") .Description site.Params.description }}
@@ -16,7 +18,7 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:locale" content="pt_BR">
 {{- with .Params.imagem }}<meta property="og:image" content="{{ . }}">{{ end }}
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="{{ if .Params.imagem }}summary_large_image{{ else }}summary{{ end }}">
 <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
 {{- range .AlternativeOutputFormats }}<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">{{ end }}
 <link rel="preload" href="{{ "fonts/manrope-700.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>

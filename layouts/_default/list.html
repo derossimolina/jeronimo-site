@@ -6,10 +6,10 @@
     {{ with .Content }}<div class="prosa lede">{{ . }}</div>{{ end }}
     {{- $pag := .Paginator }}
     {{- if $pag.Pages }}
-    <div class="grade">{{ range $pag.Pages }}{{ partial "cartao.html" (dict "page" .) }}{{ end }}</div>
+    <div class="coluna">{{ range $pag.Pages }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}</div>
     {{- if gt $pag.TotalPages 1 }}
     <nav class="paginas" aria-label="Páginas">
-      {{ if $pag.HasPrev }}<a class="txt" href="{{ $pag.Prev.URL }}">Anteriores</a>{{ end }}
+      {{ if $pag.HasPrev }}<a class="txt" href="{{ $pag.Prev.URL }}">Mais recentes</a>{{ end }}
       <span class="dado">Página {{ $pag.PageNumber }} de {{ $pag.TotalPages }}</span>
       {{ if $pag.HasNext }}<a class="txt" href="{{ $pag.Next.URL }}">Mais antigas</a>{{ end }}
     </nav>

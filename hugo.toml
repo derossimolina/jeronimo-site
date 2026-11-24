@@ -36,3 +36,4 @@ timeZone = "America/Sao_Paulo"
 
 [minify]
   minifyOutput = true
+

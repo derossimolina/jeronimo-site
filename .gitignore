@@ -3,3 +3,8 @@ resources/
 .hugo_build.lock
 node_modules/
 __pycache__/
+.env
+.env.*
+.DS_Store
+*.pyc
+.venv/

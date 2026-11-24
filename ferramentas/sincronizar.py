@@ -17,16 +17,21 @@ Uso:
   python3 ferramentas/sincronizar.py                  # lê a rede
   python3 ferramentas/sincronizar.py --offline DIR    # lê DIR/{substack,podcast,youtube}-*.xml (testes)
 """
-import argparse, html, re, sys, unicodedata, urllib.request
+import argparse, re, sys, unicodedata, urllib.parse, urllib.request
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from html.parser import HTMLParser
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from limpeza import limpa_html, resumo  # noqa: E402
+
 RAIZ = Path(__file__).resolve().parents[1]
+CONTEUDO = RAIZ / "content"   # --saida troca a pasta (testes não podem escrever no conteúdo real)
+LIMITE_BYTES = 10 * 1024 * 1024
+ID_YOUTUBE = re.compile(r"^[\w-]{11}$")
 NS = {
     "content": "http://purl.org/rss/1.0/modules/content/",
     "dc": "http://purl.org/dc/elements/1.1/",
@@ -40,12 +45,17 @@ UA = "Mozilla/5.0 (compatible; jeronimo-site-sync/1.0; +https://jeronimo.caxias.
 
 # ------------------------------------------------------------------ rede
 def baixa(url, tentativas=3):
+    if urllib.parse.urlparse(url).scheme != "https":
+        raise RuntimeError(f"{url}: só https é aceito")
     ultimo = None
     for _ in range(tentativas):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "pt-BR,pt;q=0.9"})
             with urllib.request.urlopen(req, timeout=40) as r:
-                return r.read()
+                dados = r.read(LIMITE_BYTES + 1)
+            if len(dados) > LIMITE_BYTES:
+                raise RuntimeError("resposta maior que o limite")
+            return dados
         except Exception as e:  # noqa: BLE001
             ultimo = e
     raise RuntimeError(f"{url}: {ultimo}")
@@ -71,101 +81,31 @@ def data_iso(txt):
     return d.astimezone(timezone.utc)
 
 
-PERMITE = {"p", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "a", "strong", "b", "em", "i", "br", "hr",
-           "img", "figure", "figcaption", "pre", "code", "table", "thead", "tbody", "tr", "th", "td", "sup", "sub", "u", "s"}
-DESCARTA = {"script", "style", "iframe", "form", "button", "svg", "noscript", "object", "embed", "input", "select", "textarea"}
-CLASSES_DESCARTA = ("subscription-widget", "button", "subscribe", "share-", "post-ufi", "captioned-button",
-                    "footnote-hovercard", "image-link-expand", "pencraft", "paywall")
-VAZIAS = {"br", "hr", "img", "input", "meta", "link", "source", "area", "col", "base", "wbr", "embed", "track", "param"}
-
-
-class Limpa(HTMLParser):
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.out, self.pilha, self.pula = [], [], 0
-
-    def handle_starttag(self, tag, attrs):
-        a = dict(attrs)
-        cls = (a.get("class") or "").lower()
-        if self.pula:
-            if tag not in VAZIAS:
-                self.pilha.append((tag, True))
-                self.pula += 1
-            return
-        if tag in DESCARTA or (tag in ("div", "span", "a", "p") and any(c in cls for c in CLASSES_DESCARTA)):
-            if tag not in VAZIAS:
-                self.pilha.append((tag, True))
-                self.pula = 1
-            return
-        if tag == "img":
-            src = a.get("src") or ""
-            if not src.startswith("http"):
-                return
-            w, h = a.get("width", ""), a.get("height", "")
-            if w in ("0", "1") or h in ("0", "1"):
-                return
-            alt = html.escape(a.get("alt") or "", quote=True)
-            self.out.append(f'<img src="{html.escape(src, quote=True)}" alt="{alt}" loading="lazy">')
-            return
-        if tag in PERMITE:
-            at = ""
-            if tag == "a":
-                href = a.get("href") or ""
-                if re.match(r"^(https?:|mailto:|#|/)", href):
-                    at = f' href="{html.escape(href, quote=True)}"'
-                    if href.startswith("http"):
-                        at += ' rel="noopener"'
-            self.out.append(f"<{tag}{at}>")
-            if tag not in VAZIAS:
-                self.pilha.append((tag, False))
-        else:
-            # tag desconhecida (div, span, section...): descarta a tag e mantém o conteúdo
-            if tag not in VAZIAS:
-                self.pilha.append((tag, None))
-
-    def handle_endtag(self, tag):
-        for i in range(len(self.pilha) - 1, -1, -1):
-            if self.pilha[i][0] == tag:
-                _, estado = self.pilha[i]
-                del self.pilha[i:]
-                if estado is True:
-                    self.pula = max(0, self.pula - 1)
-                elif estado is False and not self.pula:
-                    self.out.append(f"</{tag}>")
-                return
-
-    def handle_data(self, d):
-        if not self.pula:
-            self.out.append(html.escape(d, quote=False))
-
-
-def limpa_html(txt):
-    p = Limpa()
-    p.feed(txt or "")
-    p.close()
-    res = "".join(p.out)
-    res = re.sub(r"<p>\s*(<br>)?\s*</p>", "", res)
-    return res.strip()
-
-
-def resumo(txt, n=200):
-    t = re.sub(r"<[^>]+>", " ", txt or "")
-    t = re.sub(r"\s+", " ", html.unescape(t)).strip()
-    if len(t) <= n:
-        return t
-    return t[:n].rsplit(" ", 1)[0].rstrip(",;:.") + "…"
-
-
 # ------------------------------------------------------------------ escrita
+def eh_gerado(texto):
+    """True se o front matter do arquivo traz `gerado: true` (e só nele, não no corpo)."""
+    if not texto.startswith("---"):
+        return False
+    partes = texto.split("---", 2)
+    if len(partes) < 3:
+        return False
+    try:
+        fm = yaml.safe_load(partes[1]) or {}
+    except yaml.YAMLError:
+        return False
+    return isinstance(fm, dict) and fm.get("gerado") is True
+
+
 def escreve(pasta, nome, fm, corpo, relatorio):
     pasta.mkdir(parents=True, exist_ok=True)
     f = pasta / nome
-    if f.exists() and "gerado: true" not in f.read_text(encoding="utf-8").split("---", 2)[1]:
+    atual = f.read_text(encoding="utf-8") if f.exists() else None
+    if atual is not None and not eh_gerado(atual):
         relatorio["ignorados"] += 1
         return
     fm = {**fm, "gerado": True}
     novo = "---\n" + yaml.safe_dump(fm, allow_unicode=True, sort_keys=False, width=1000) + "---\n\n" + corpo.strip() + "\n"
-    if f.exists() and f.read_text(encoding="utf-8") == novo:
+    if atual == novo:
         relatorio["iguais"] += 1
         return
     f.write_text(novo, encoding="utf-8")
@@ -227,7 +167,7 @@ def sync_substack(cfg, xml_por_host, rel):
                     break
                 tipo = "podcast" if i["audio"] else "newsletter"
                 nome, fm, corpo = monta_post(i, fonte["marca"], tipo)
-                escreve(RAIZ / "content" / tipo, nome, fm, corpo, rel)
+                escreve(CONTEUDO / tipo, nome, fm, corpo, rel)
                 n += 1
             print(f"OK     substack {host}: {n} itens")
         except Exception as e:  # noqa: BLE001
@@ -244,7 +184,7 @@ def sync_podcasts(cfg, baixa_url, rel):
                 if n >= cfg.get("max_itens", 60) or not i["titulo"] or not i["audio"]:
                     continue
                 nome, fm, corpo = monta_post(i, fonte.get("marca", "jeronimo"), "podcast")
-                escreve(RAIZ / "content" / "podcast", nome, fm, corpo, rel)
+                escreve(CONTEUDO / "podcast", nome, fm, corpo, rel)
                 n += 1
             print(f"OK     podcast {fonte['url']}: {n} episódios")
         except Exception as e:  # noqa: BLE001
@@ -274,7 +214,7 @@ def sync_youtube(cfg, baixa_url, rel):
                     break
                 vid = txt(e, "yt:videoId")
                 titulo = txt(e, "atom:title")
-                if not vid or not titulo:
+                if not ID_YOUTUBE.match(vid) or not titulo:
                     continue
                 d = data_iso(txt(e, "atom:published"))
                 desc = txt(e, "media:group/media:description")
@@ -283,7 +223,7 @@ def sync_youtube(cfg, baixa_url, rel):
                       "marca": fonte["marca"], "youtube": vid, "origem": f"https://www.youtube.com/watch?v={vid}"}
                 fm = {k: v for k, v in fm.items() if v not in (None, "")}
                 nome = f"{d:%Y-%m-%d}-{fm['slug']}.md" if d else f"{fm['slug']}.md"
-                escreve(RAIZ / "content" / "videos", nome, fm, "", rel)
+                escreve(CONTEUDO / "videos", nome, fm, "", rel)
                 n += 1
             print(f"OK     youtube @{nome_fonte}: {n} vídeos")
         except Exception as e:  # noqa: BLE001
@@ -292,9 +232,13 @@ def sync_youtube(cfg, baixa_url, rel):
 
 
 def main():
+    global CONTEUDO
     ap = argparse.ArgumentParser()
+    ap.add_argument("--saida", help="pasta de saída no lugar de content/ (testes)")
     ap.add_argument("--offline", help="pasta com substack-HOST.xml, podcast-N.xml, youtube.xml (testes)")
     a = ap.parse_args()
+    if a.saida:
+        CONTEUDO = Path(a.saida)
     cfg = yaml.safe_load((RAIZ / "data" / "fontes.yaml").read_text(encoding="utf-8"))
     rel = {"escritos": 0, "iguais": 0, "ignorados": 0, "falhas": []}
     if a.offline:

@@ -1,50 +1,55 @@
 {{ define "main" }}
-<section class="heroi">
-  <div class="caixa">
-    <p class="rot">Jerônimo de Rossi Molina · analista político</p>
-    <h1>{{ site.Params.tagline }}</h1>
-    <p class="lede">Newsletter, podcast e vídeos. O fato e o documento vêm primeiro; a posição vem depois, no título, curta e sustentada.</p>
-    <div class="acoes">
-      <a class="btn btn-prim" href="{{ site.Params.newsletter }}" rel="noopener">Assine a newsletter</a>
-      <a class="btn btn-sec" href="{{ "/nossa-linha-editorial/" | relURL }}">Leia a linha editorial</a>
-    </div>
-  </div>
-</section>
-
 {{- $news := where site.RegularPages "Section" "newsletter" }}
 {{- $pod := where site.RegularPages "Section" "podcast" }}
 {{- $vid := where site.RegularPages "Section" "videos" }}
-
-<section class="bloco">
+{{- $recentes := first 1 (sort (union $news (union $pod $vid)) "Date" "desc") }}
+<section class="heroi">
   <div class="caixa">
-    <div class="bloco-topo"><h2>Últimas análises</h2><a class="txt" href="{{ "/newsletter/" | relURL }}">Ver todas</a></div>
-    {{- if $news }}
-    <div class="grade">
-      {{- range $i, $p := first 3 $news }}{{ partial "cartao.html" (dict "page" $p "destaque" (eq $i 0)) }}{{ end }}
+    <div class="coluna">
+      <p class="rot">Jerônimo de Rossi Molina · analista político</p>
+      <h1>{{ site.Params.tagline }}</h1>
+      <p class="lede">Newsletter, podcast e vídeos. O fato e o documento vêm primeiro; a posição vem depois, no título, curta e sustentada.</p>
+      <p class="tempo-livre"><span class="peq">Acompanhe em</span>
+        <a class="chip" href="{{ site.Params.newsletter }}" rel="noopener"><span class="dado">01</span>Newsletter</a>
+        <a class="chip" href="{{ "/podcast/" | relURL }}"><span class="dado">02</span>Podcast</a>
+        <a class="chip" href="{{ "/videos/" | relURL }}"><span class="dado">03</span>Vídeos</a>
+      </p>
     </div>
-    {{- else }}
-    {{ partial "vazio.html" (dict "texto" "Nenhuma análise publicada aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
-    {{- end }}
+    <div class="horizonte">
+      {{ partial "textura.html" . }}
+      {{- range $recentes }}
+      <p class="legenda"><strong>Última publicação</strong><a href="{{ .RelPermalink }}">{{ .Title }}</a><br>{{ .Date.Format "02.01.2006" }} · {{ if eq .Section "newsletter" }}Newsletter{{ else if eq .Section "podcast" }}Podcast{{ else }}Vídeo{{ end }}</p>
+      {{- end }}
+    </div>
   </div>
 </section>
 
-<section class="bloco">
+<section class="trabalhos">
   <div class="caixa">
-    <div class="bloco-topo"><h2>Em vídeo e áudio</h2><a class="txt" href="{{ "/videos/" | relURL }}">Ver vídeos</a></div>
-    {{- $midia := first 3 (sort (union $vid $pod) "Date" "desc") }}
-    {{- if $midia }}
-    <div class="grade">{{ range $midia }}{{ partial "cartao.html" (dict "page" .) }}{{ end }}</div>
-    {{- else }}
-    {{ partial "vazio.html" (dict "texto" "Nenhum vídeo ou episódio publicado aqui ainda." "link" "Ver o canal no YouTube" "url" "https://www.youtube.com/@jeronimomolina") }}
-    {{- end }}
+    <div class="coluna">
+      <h2 class="rot">Análises</h2>
+      {{- if $news }}
+      {{- range first 5 $news }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}
+      <p class="ver-todas"><a class="txt" href="{{ "/newsletter/" | relURL }}">Ver todas as análises</a></p>
+      {{- else }}
+      {{ partial "vazio.html" (dict "texto" "Nenhuma análise publicada aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
+      {{- end }}
+    </div>
   </div>
 </section>
 
-<section class="bloco">
-  <div class="caixa estreita">
-    <h2>Como trabalhamos</h2>
-    <p>Toda peça tem fato com fonte, a posição à vista e o erro corrigido em até 24 horas. A página de transparência diz quem escreve, de onde escreve, quem paga e o que fazemos quando erramos.</p>
-    <p><a class="txt" href="{{ "/nossa-linha-editorial/" | relURL }}">Nossa linha editorial</a></p>
+<section class="trabalhos">
+  <div class="caixa">
+    <div class="coluna">
+      <h2 class="rot">Em vídeo e áudio</h2>
+      {{- $midia := first 3 (sort (union $vid $pod) "Date" "desc") }}
+      {{- if $midia }}
+      {{- range $midia }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}
+      <p class="ver-todas"><a class="txt" href="{{ "/videos/" | relURL }}">Ver todos os vídeos</a></p>
+      {{- else }}
+      {{ partial "vazio.html" (dict "texto" "Nenhum vídeo ou episódio publicado aqui ainda." "link" "Ver o canal no YouTube" "url" "https://www.youtube.com/@jeronimomolina") }}
+      {{- end }}
+    </div>
   </div>
 </section>
 {{ end }}

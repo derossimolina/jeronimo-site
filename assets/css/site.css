@@ -206,3 +206,152 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 @media (min-width:1440px){
   .horizonte{height:440px}
 }
+
+/* =====================================================================================
+   Home com cena WebGL (24/11/2026). Exceção controlada à seção 2.5: ver DESIGN.md › Decisões.
+   ===================================================================================== */
+:root{--term-fundo:#100C08;--term-tinta:#F3F4F5;--term-2:#DBE0E1;--term-3:#9AA0A3;--term-linha:#2B2620;--term-acento:#FB5133}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.texto-3{color:var(--texto-3)}
+
+/* cena: canvas fixo atrás de tudo; o SVG da hero é o substituto quando não há WebGL */
+.cena{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:0;transition:opacity 400ms var(--easing)}
+html.webgl .cena{opacity:1}
+html.webgl .hero-simbolo{visibility:hidden}
+html.reduzido .cena{position:absolute;height:100svh}
+.pg-home::before{opacity:.25}
+
+/* hero sem botões */
+.hero{position:relative;min-height:calc(100svh - 96px);display:flex;align-items:center;padding:48px 0 96px}
+.hero-in{display:grid;gap:48px;align-items:center;width:100%}
+.hero h1{font-size:clamp(36px,7vw,72px);line-height:1.05;letter-spacing:-.02em;max-width:14ch;margin-bottom:24px}
+.hero .lede{max-width:34rem;margin:0}
+.hero-simbolo{display:flex;justify-content:center}
+.hero-simbolo .textura{width:min(70vw,420px);height:auto}
+.hero-role{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+@media (min-width:900px){.hero-in{grid-template-columns:1.15fr 1fr}}
+
+/* seções */
+.secao{padding:128px 0 0;position:relative}
+.secao-topo{max-width:44rem;margin-bottom:48px}
+.secao-topo h2{font-size:clamp(28px,4vw,40px);line-height:1.15;font-weight:700;margin-bottom:16px}
+.secao-topo .lede{margin:0}
+
+/* entrada ao rolar: opacidade e 16 px, 400 ms, uma vez (sem JS, tudo visível) */
+html.js .surgir{opacity:0;transform:translateY(16px);transition:opacity 400ms var(--easing),transform 400ms var(--easing)}
+html.js .surgir.visivel{opacity:1;transform:none}
+html.js .news-grade li:nth-child(2),html.js .videos-grade li:nth-child(2){transition-delay:60ms}
+html.js .news-grade li:nth-child(3),html.js .videos-grade li:nth-child(3){transition-delay:120ms}
+html.js .news-grade li:nth-child(4),html.js .videos-grade li:nth-child(4){transition-delay:180ms}
+html.js .news-grade li:nth-child(5){transition-delay:240ms}
+html.js .news-grade li:nth-child(6){transition-delay:300ms}
+
+/* O que faço: capas + terminal */
+.faco-grade{display:grid;gap:48px;align-items:center}
+@media (min-width:1024px){.faco-grade{grid-template-columns:1fr 1.15fr;gap:64px}}
+.capas{position:relative;min-height:clamp(300px,68vw,480px)}
+@media (max-width:639px){.capa-link{width:44%}}
+.capas>.vazio{position:static}
+.capa-link{container-type:inline-size;position:absolute;top:0;left:0;width:min(44%,260px);display:block;text-decoration:none;border-radius:8px;transition:transform 400ms var(--easing),box-shadow 150ms var(--easing)}
+.capa-link:nth-child(1){z-index:3;transform:translate(0,24px) rotate(-4deg)}
+.capa-link:nth-child(2){z-index:2;transform:translate(10%,12px) rotate(-1deg)}
+.capa-link:nth-child(3){z-index:1;transform:translate(20%,0) rotate(2deg)}
+.capas.visivel .capa-link:nth-child(1),html:not(.js) .capa-link:nth-child(1){transform:translate(0,40px) rotate(-6deg)}
+.capas.visivel .capa-link:nth-child(2),html:not(.js) .capa-link:nth-child(2){transform:translate(64%,12px) rotate(0deg);transition-delay:60ms}
+.capas.visivel .capa-link:nth-child(3),html:not(.js) .capa-link:nth-child(3){transform:translate(128%,-8px) rotate(5deg);transition-delay:120ms}
+.capa-link:hover,.capa-link:focus-visible{z-index:4}
+.capa-link:hover .capa,.capa-link:focus-visible .capa{border-color:var(--acento)}
+
+.capa{position:relative;aspect-ratio:1/1.414;display:flex;flex-direction:column;gap:6cqi;padding:8cqi;background:var(--fundo);color:var(--tinta);border:1px solid var(--linha);border-radius:8px;overflow:hidden;transition:border-color 250ms var(--easing)}
+.capa-topo{display:flex;justify-content:space-between;gap:8px;font:500 clamp(9px,4.4cqi,12px)/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.capa-rot{color:var(--acento)}
+.capa-data{color:var(--texto-3)}
+.capa-simbolo{width:46cqi;height:auto;color:var(--acento);margin-top:4cqi}
+.capa-titulo{margin:auto 0 0;font:700 clamp(13px,8cqi,24px)/1.15 var(--f-titulo);color:var(--tinta);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.capa-pe{display:flex;align-items:center;gap:2.5cqi;padding-top:5cqi;border-top:1px solid var(--linha);font:500 clamp(9px,4.2cqi,12px)/1.2 var(--f-mono);color:var(--texto-3)}
+.capa-marca{width:7cqi;height:7cqi;color:var(--acento);flex:none}
+.capa-fonte{margin-left:auto;text-transform:uppercase;letter-spacing:.06em}
+.capa-larga{aspect-ratio:16/9;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr auto;gap:3cqi 4cqi;padding:5cqi}
+.capa-larga .capa-topo{grid-column:1/-1;font-size:clamp(9px,2.2cqi,12px)}
+.capa-larga .capa-simbolo{grid-row:2;grid-column:2;width:22cqi;margin:0;align-self:center}
+.capa-larga .capa-titulo{grid-row:2;grid-column:1;align-self:end;font-size:clamp(16px,4.6cqi,32px)}
+.capa-larga .capa-pe{grid-column:1/-1;font-size:clamp(9px,2cqi,12px)}
+.capa-larga .capa-marca{width:3.4cqi;height:3.4cqi}
+
+/* terminal no estilo Ghostty, prompt do oh-my-bash. Escuro nos dois temas (é um terminal). */
+.terminal{margin:0;background:var(--term-fundo);border:1px solid var(--term-linha);border-radius:8px;overflow:hidden;color:var(--term-2);box-shadow:0 0 0 1px color-mix(in srgb,var(--term-tinta) 4%,transparent)}
+.term-barra{position:relative;display:flex;align-items:center;justify-content:center;height:36px;padding:0 12px;border-bottom:1px solid var(--term-linha)}
+.term-pontos{position:absolute;left:12px;display:flex;gap:8px}
+.term-pontos i{width:12px;height:12px;border-radius:50%;background:var(--term-linha)}
+.term-pontos i:first-child{background:var(--term-acento)}
+.term-titulo{font:500 12px/1 var(--f-mono);color:var(--term-3)}
+.term-tela{margin:0;padding:20px 20px 24px;font:500 clamp(12px,1.6vw,14px)/1.75 var(--f-mono);white-space:pre-wrap;word-break:break-word;overflow:hidden}
+.t-linha{display:block;min-height:1.75em}
+.t-seta,.t-ramo,.t-ok{color:var(--term-acento)}
+.t-dir,.t-cmd{color:var(--term-tinta)}
+.t-git{color:var(--term-3)}
+.t-saida{color:var(--term-2)}
+.t-arq{color:var(--term-tinta)}
+.t-cursor{display:inline-block;width:.6em;height:1.15em;vertical-align:text-bottom;background:var(--term-acento);animation:cursor 1s steps(1) 3}
+@keyframes cursor{50%{opacity:0}}
+
+/* newsletter */
+.news-destaque{position:relative;display:grid;gap:24px 48px;align-items:end;margin-bottom:64px}
+@media (min-width:900px){.news-destaque{grid-template-columns:1.35fr 1fr}}
+.news-destaque h3{font-size:clamp(24px,3vw,34px);line-height:1.15;font-weight:700;margin:8px 0 16px}
+.news-destaque .resumo{font-size:18px;color:var(--texto-2);margin:0}
+.news-midia{container-type:inline-size;position:relative;display:block;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:var(--linha);border:1px solid var(--linha);transition:border-color 250ms var(--easing)}
+.news-midia img{display:block;width:100%;height:100%;object-fit:cover}
+.news-midia .capa{border:0;border-radius:0;height:100%}
+html.js .revelar-img{clip-path:inset(0 0 100% 0)}
+html.js .visivel .revelar-img,html.js .revelar-img.visivel{clip-path:inset(0);transition:clip-path 400ms var(--easing),border-color 250ms var(--easing)}
+html.js .revelar-img img{transform:scale(1.06);transition:transform 400ms var(--easing)}
+html.js .visivel .revelar-img img{transform:none}
+.news-destaque:hover .news-midia,.news-cartao:hover .news-midia,.news-destaque:has(.cartao-link:focus-visible) .news-midia,.news-cartao:has(.cartao-link:focus-visible) .news-midia{border-color:var(--acento)}
+.news-grade{list-style:none;margin:0;padding:0;display:grid;gap:48px 32px;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
+.news-cartao{position:relative}
+.news-cartao .dado{margin:16px 0 8px}
+.news-cartao h3{font-size:20px;line-height:1.3}
+.news-cartao h3 a,.news-destaque h3 a,.video-cartao h3 a,.episodios h3 a{color:var(--tinta);text-decoration:none}
+.news-cartao h3 a:hover,.news-destaque h3 a:hover,.video-cartao h3 a:hover,.episodios h3 a:hover{text-decoration:underline;text-decoration-thickness:2px}
+.news-destaque:has(.cartao-link:focus-visible),.news-cartao:has(.cartao-link:focus-visible){outline:2px solid var(--acento);outline-offset:4px;border-radius:8px}
+
+/* vídeos */
+.videos-grade{list-style:none;margin:0;padding:0;display:grid;gap:48px 32px;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr))}
+.videos-grade.um{grid-template-columns:1fr}
+.video-cartao .video{margin:0 0 16px}
+.videos-grade.um .video-cartao{display:grid;gap:24px 48px;align-items:center}
+@media (min-width:900px){.videos-grade.um .video-cartao{grid-template-columns:1.5fr 1fr}.videos-grade.um .video{margin:0}}
+.video-cartao h3{font-size:clamp(20px,2.4vw,28px);line-height:1.2;margin:8px 0 12px}
+.video-cartao .resumo{color:var(--texto-2)}
+.video-capa img{transition:transform 400ms var(--easing)}
+.video-capa:hover img{transform:scale(1.03)}
+
+/* podcast: onda que sobe uma vez quando a seção entra */
+.podcast-grade{display:grid;gap:48px;align-items:center}
+@media (min-width:900px){.podcast-grade{grid-template-columns:1.2fr 1fr}}
+.onda{display:flex;align-items:center;gap:4px;height:200px;padding:0 4px}
+.onda i{flex:1;height:100%;border-radius:4px;background:var(--acento);transform-origin:50% 50%;transform:scaleY(var(--h,.4))}
+.onda i:nth-child(even){background:var(--texto-3)}
+.onda i:nth-child(3n){--h:.72}.onda i:nth-child(4n){--h:.28}.onda i:nth-child(5n){--h:.9}.onda i:nth-child(7n){--h:.55}.onda i:nth-child(11n){--h:1}.onda i:nth-child(6n+1){--h:.18}
+html.js .podcast-grade .onda i{transform:scaleY(.06);transition:transform 400ms var(--easing)}
+html.js .podcast-grade.visivel .onda i{transform:scaleY(var(--h,.4))}
+html.js .podcast-grade.visivel .onda i:nth-child(n+11){transition-delay:60ms}
+html.js .podcast-grade.visivel .onda i:nth-child(n+21){transition-delay:120ms}
+html.js .podcast-grade.visivel .onda i:nth-child(n+31){transition-delay:180ms}
+.episodios{list-style:none;margin:0;padding:0}
+.episodios li{padding:20px 0;border-top:1px solid var(--linha)}
+.episodios h3{font-size:20px}
+.podcast-show .lede{margin-bottom:24px}
+.spotify iframe{display:block;width:100%;height:352px;border:0;border-radius:8px}
+.spotify .peq{margin:12px 0 0}
+
+/* rodapé: só ícones */
+.rodape{margin-top:160px}
+.rodape-in{align-items:center}
+.redes{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:0;padding:0}
+.rodape .redes a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:8px;color:var(--texto-2);text-decoration:none;transition:color 150ms var(--easing)}
+.rodape .redes a:hover{color:var(--acento)}
+.redes .ico{width:20px;height:20px}
+.t-linha[hidden]{display:none}
+.capa-topo{flex-wrap:wrap;row-gap:2px}.capa-rot{white-space:nowrap}

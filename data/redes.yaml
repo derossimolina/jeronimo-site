@@ -1,14 +1,20 @@
-# Perfis da marca a partir de 30/11/2026 (memória de 23/11/2026).
-# Instagram, X e TikTok não têm replicação automática: o site só linka.
-- nome: Newsletter
+# Perfis da marca (rodapé, só ícones). `icone` aponta para layouts/partials/icones/<icone>.svg.
+# Ícones de marca: Simple Icons (CC0); RSS: Lucide (ISC).
+- nome: Newsletter no Substack
+  icone: substack
   url: https://jeronimomolina.substack.com
 - nome: YouTube
-  url: https://www.youtube.com/@jeronimomolina
+  icone: youtube
+  url: https://www.youtube.com/@jderossimolina
 - nome: Instagram
+  icone: instagram
   url: https://www.instagram.com/jderossimolina
 - nome: X
+  icone: x
   url: https://x.com/jdermolina
 - nome: TikTok
+  icone: tiktok
   url: https://www.tiktok.com/@jderossimolina
 - nome: LinkedIn
+  icone: linkedin
   url: https://www.linkedin.com/in/molinajeronimo

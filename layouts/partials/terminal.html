@@ -1,0 +1,34 @@
+{{- /* Terminal ilustrativo no estilo Ghostty com prompt do oh-my-bash. O texto completo já vem no HTML
+       (sem JS, aparece pronto); o terminal.js o digita uma vez quando entra na tela. Conteúdo real: títulos e slugs. */ -}}
+{{- $posts := .posts }}
+{{- $prompt := `<span class="t-seta">➜</span> <span class="t-dir">~/analises</span> <span class="t-git">git:(<span class="t-ramo">main</span>)</span> ` }}
+<figure class="terminal">
+  <div class="term-barra">
+    <span class="term-pontos" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="term-titulo">jeronimo@analise: ~/analises</span>
+  </div>
+  <pre class="term-tela" aria-hidden="true" data-terminal>
+{{- if $posts -}}
+<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">ls -1 relatorios/</span></span>
+{{- range $posts -}}
+<span class="t-linha t-saida"><span class="t-arq">{{ .Slug | default (path.Base .File.ContentBaseName) | truncate 26 "" | strings.TrimRight "-" }}.pdf</span></span>
+{{- end -}}
+<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">analise --fontes oficiais {{ (index $posts 0).Slug | truncate 26 "" | strings.TrimRight "-" }}.pdf</span></span>
+{{- /**/ -}}
+<span class="t-linha t-saida">  [1/3] fato ......... documento e data      <span class="t-ok">✓</span></span>
+{{- /**/ -}}
+<span class="t-linha t-saida">  [2/3] fonte ........ citada no texto       <span class="t-ok">✓</span></span>
+{{- /**/ -}}
+<span class="t-linha t-saida">  [3/3] posição ...... declarada no título   <span class="t-ok">✓</span></span>
+{{- /**/ -}}
+<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">publicar --newsletter</span></span>
+{{- /**/ -}}
+<span class="t-linha t-saida">  <span class="t-ok">✓</span> publicado: “{{ (index $posts 0).Title }}”</span>
+{{- else -}}
+<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">ls -1 relatorios/</span></span>
+{{- /**/ -}}
+<span class="t-linha t-saida">(vazio)</span>
+{{- end -}}
+<span class="t-linha">{{ $prompt | safeHTML }}<span class="t-cursor"></span></span></pre>
+  <figcaption class="sr">Terminal ilustrativo: o processo de cada relatório confere o fato com documento e data, cita a fonte no texto e declara a posição no título antes de publicar{{ with $posts }}; o último publicado foi “{{ (index . 0).Title }}”{{ end }}.</figcaption>
+</figure>

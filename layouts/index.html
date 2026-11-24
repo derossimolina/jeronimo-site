@@ -1,55 +1,150 @@
 {{ define "main" }}
-{{- $news := where site.RegularPages "Section" "newsletter" }}
-{{- $pod := where site.RegularPages "Section" "podcast" }}
-{{- $vid := where site.RegularPages "Section" "videos" }}
-{{- $recentes := first 1 (sort (union $news (union $pod $vid)) "Date" "desc") }}
-<section class="heroi">
-  <div class="caixa">
-    <div class="coluna">
+{{- $news := (where site.RegularPages "Section" "newsletter").ByDate.Reverse }}
+{{- $pod := (where site.RegularPages "Section" "podcast").ByDate.Reverse }}
+{{- $vid := (where site.RegularPages "Section" "videos").ByDate.Reverse }}
+
+{{- /* Cena WebGL (Three.js): fundo fixo que muda de forma conforme a seção. Sem WebGL, sem JS ou com
+       movimento reduzido, fica o símbolo hachurado em SVG da hero e nada se move. */}}
+<canvas class="cena" id="cena" aria-hidden="true"></canvas>
+
+<section class="hero" id="inicio" data-forma="simbolo" aria-labelledby="hero-titulo">
+  <div class="caixa hero-in">
+    <div class="hero-texto">
       <p class="rot">Jerônimo de Rossi Molina · analista político</p>
-      <h1>{{ site.Params.tagline }}</h1>
-      <p class="lede">Newsletter, podcast e vídeos. O fato e o documento vêm primeiro; a posição vem depois, no título, curta e sustentada.</p>
-      <p class="tempo-livre"><span class="peq">Acompanhe em</span>
-        <a class="chip" href="{{ site.Params.newsletter }}" rel="noopener"><span class="dado">01</span>Newsletter</a>
-        <a class="chip" href="{{ "/podcast/" | relURL }}"><span class="dado">02</span>Podcast</a>
-        <a class="chip" href="{{ "/videos/" | relURL }}"><span class="dado">03</span>Vídeos</a>
-      </p>
+      <h1 id="hero-titulo">{{ site.Params.tagline }}</h1>
+      <p class="lede">O fato e o documento vêm primeiro. A posição vem depois, no título, curta e sustentada.</p>
     </div>
-    <div class="horizonte">
-      {{ partial "textura.html" . }}
-      {{- range $recentes }}
-      <p class="legenda"><strong>Última publicação</strong><a href="{{ .RelPermalink }}">{{ .Title }}</a><br>{{ .Date.Format "02.01.2006" }} · {{ if eq .Section "newsletter" }}Newsletter{{ else if eq .Section "podcast" }}Podcast{{ else }}Vídeo{{ end }}</p>
+    <div class="hero-simbolo">{{ partial "textura.html" . }}</div>
+  </div>
+  <p class="hero-role dado" aria-hidden="true">Role <span>↓</span></p>
+</section>
+
+<section class="secao faco" id="o-que-faco" data-forma="grade" aria-labelledby="faco-titulo">
+  <div class="caixa">
+    <div class="secao-topo surgir">
+      <p class="rot">O que faço</p>
+      <h2 id="faco-titulo">Conteúdo de análise política e geopolítica</h2>
+      <p class="lede">Cada relatório parte de documento oficial, cita a fonte no texto e declara a posição no título.</p>
+    </div>
+    <div class="faco-grade">
+      <div class="capas" data-capas>
+        {{- range $i, $p := first 3 $news }}
+        <a class="capa-link" href="{{ $p.RelPermalink }}" aria-label="Relatório: {{ $p.Title }}">{{ partial "capa-relatorio.html" (dict "p" $p "n" (add $i 1)) }}</a>
+        {{- else }}
+        {{ partial "vazio.html" (dict "texto" "Nenhum relatório publicado aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
+        {{- end }}
+      </div>
+      {{ partial "terminal.html" (dict "posts" (first 3 $news)) }}
+    </div>
+  </div>
+</section>
+
+<section class="secao news" id="newsletter" data-forma="onda" aria-labelledby="news-titulo">
+  <div class="caixa">
+    <div class="secao-topo surgir">
+      <p class="rot">Newsletter</p>
+      <h2 id="news-titulo">Últimas análises</h2>
+    </div>
+    {{- with $news }}
+    {{- $d := index . 0 }}
+    <article class="news-destaque surgir">
+      <div class="news-midia revelar-img" aria-hidden="true">
+        {{- with $d.Params.imagem }}<img src="{{ . }}" alt="" width="1024" height="576" loading="lazy" decoding="async">{{ else }}{{ partial "capa-relatorio.html" (dict "p" $d "n" 1 "larga" true) }}{{ end }}
+      </div>
+      <div class="news-texto">
+        <p class="dado"><time datetime="{{ $d.Date.Format "2006-01-02" }}">{{ $d.Date.Format "02/01/2006" }}</time></p>
+        <h3><a class="cartao-link" href="{{ $d.RelPermalink }}">{{ $d.Title }}</a></h3>
+        {{- with $d.Description }}<p class="resumo">{{ . }}</p>{{ end }}
+      </div>
+    </article>
+    {{- with after 1 (first 7 $news) }}
+    <ul class="news-grade" role="list">
+      {{- range . }}
+      <li class="surgir">
+        <article class="news-cartao">
+          <div class="news-midia revelar-img" aria-hidden="true">
+            {{- with .Params.imagem }}<img src="{{ . }}" alt="" width="640" height="360" loading="lazy" decoding="async">{{ else }}{{ partial "capa-relatorio.html" (dict "p" . "n" 0 "larga" true) }}{{ end }}
+          </div>
+          <p class="dado"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
+          <h3><a class="cartao-link" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        </article>
+      </li>
+      {{- end }}
+    </ul>
+    {{- end }}
+    <p class="ver-todas"><a class="txt" href="{{ "/newsletter/" | relURL }}">Ver todas as análises</a></p>
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" "Nenhuma análise publicada aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
+    {{- end }}
+  </div>
+</section>
+
+<section class="secao videos" id="videos" data-forma="quadro" aria-labelledby="videos-titulo">
+  <div class="caixa">
+    <div class="secao-topo surgir">
+      <p class="rot">Vídeos</p>
+      <h2 id="videos-titulo">Análise em vídeo</h2>
+    </div>
+    {{- with first 4 $vid }}
+    <ul class="videos-grade{{ if eq (len .) 1 }} um{{ end }}" role="list">
+      {{- range . }}
+      <li class="surgir">
+        <article class="video-cartao">
+          {{- with .Params.youtube }}
+          <div class="video" data-id="{{ . }}">
+            <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener noreferrer" class="video-capa">
+              <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
+              <span class="video-play">Assistir<span class="sr"> ao vídeo</span></span>
+            </a>
+          </div>
+          {{- end }}
+          <div class="video-texto">
+            <p class="dado"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
+            <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            {{- with .Description }}<p class="resumo">{{ . }}</p>{{ end }}
+            <p class="peq texto-3">Ao assistir, o YouTube pode registrar o acesso.</p>
+          </div>
+        </article>
+      </li>
+      {{- end }}
+    </ul>
+    <p class="ver-todas"><a class="txt" href="{{ "/videos/" | relURL }}">Ver todos os vídeos</a></p>
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" "Nenhum vídeo publicado aqui ainda." "link" "Ver o canal no YouTube" "url" "https://www.youtube.com/@jderossimolina") }}
+    {{- end }}
+  </div>
+</section>
+
+<section class="secao podcast" id="podcast" data-forma="som" aria-labelledby="podcast-titulo">
+  <div class="caixa">
+    <div class="secao-topo surgir">
+      <p class="rot">Podcast</p>
+      <h2 id="podcast-titulo">Para ouvir</h2>
+    </div>
+    <div class="podcast-grade surgir">
+      <div class="onda" aria-hidden="true">{{ range seq 40 }}<i></i>{{ end }}</div>
+      {{- with first 4 $pod }}
+      <ul class="episodios" role="list">
+        {{- range . }}
+        <li>
+          <p class="dado"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time>{{ with .Params.duracao }} · {{ . }}{{ end }}</p>
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        </li>
+        {{- end }}
+      </ul>
+      {{- else }}
+      <div class="podcast-show">
+        <p class="lede">Os episódios estão no Spotify.</p>
+        <div class="spotify" data-show="{{ site.Params.spotifyShow }}">
+          <a class="btn btn-sec" href="https://open.spotify.com/show/{{ site.Params.spotifyShow }}" rel="noopener">Ouvir no Spotify</a>
+          <p class="peq texto-3">Ao abrir o player, o Spotify pode registrar o acesso.</p>
+        </div>
+      </div>
       {{- end }}
     </div>
   </div>
 </section>
 
-<section class="trabalhos">
-  <div class="caixa">
-    <div class="coluna">
-      <h2 class="rot">Análises</h2>
-      {{- if $news }}
-      {{- range first 5 $news }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}
-      <p class="ver-todas"><a class="txt" href="{{ "/newsletter/" | relURL }}">Ver todas as análises</a></p>
-      {{- else }}
-      {{ partial "vazio.html" (dict "texto" "Nenhuma análise publicada aqui ainda." "link" "Assine a newsletter" "url" site.Params.newsletter) }}
-      {{- end }}
-    </div>
-  </div>
-</section>
-
-<section class="trabalhos">
-  <div class="caixa">
-    <div class="coluna">
-      <h2 class="rot">Em vídeo e áudio</h2>
-      {{- $midia := first 3 (sort (union $vid $pod) "Date" "desc") }}
-      {{- if $midia }}
-      {{- range $midia }}{{ partial "trabalho.html" (dict "page" .) }}{{ end }}
-      <p class="ver-todas"><a class="txt" href="{{ "/videos/" | relURL }}">Ver todos os vídeos</a></p>
-      {{- else }}
-      {{ partial "vazio.html" (dict "texto" "Nenhum vídeo ou episódio publicado aqui ainda." "link" "Ver o canal no YouTube" "url" "https://www.youtube.com/@jeronimomolina") }}
-      {{- end }}
-    </div>
-  </div>
-</section>
+{{- $js := resources.Get "js/home.js" | js.Build (dict "minify" true "format" "esm" "target" "es2020") | resources.Fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 {{ end }}

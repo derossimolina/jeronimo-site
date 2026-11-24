@@ -14,6 +14,7 @@ timeZone = "America/Sao_Paulo"
   description = "Análise política com fato, fonte e posição. Newsletter, podcast e vídeos de Jerônimo de Rossi Molina."
   tagline = "Análise política com fato, fonte e posição."
   newsletter = "https://jeronimomolina.substack.com"
+  spotifyShow = "0DifYuIonPXjgYYRpenHM8"
 
 [markup.goldmark.renderer]
   unsafe = true

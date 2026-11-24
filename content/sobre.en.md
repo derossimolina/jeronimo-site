@@ -2,7 +2,6 @@
 title: About
 slug: about
 description: "Who signs, what the brand publishes, the research behind it and how we report."
-rotulo: About
 toc: true
 lede: true
 revelar: true
@@ -82,18 +81,6 @@ The brand is funded by **subscribers and advertisers**. If there is another sour
 - **Free agenda.** Sponsors do not choose, review or veto editorial content, nor receive favorable treatment in coverage.
 - **Conflict of interest.** We do not accept sponsorship from anyone who is the subject of ongoing critical coverage without declaring the tie to readers.
 
-## Professional associations
-
-Participation of the editor in professional associations is declared here and, when the association or one of its members is the subject of a piece, in the piece itself. Participation does not condition coverage: the association is criticized for what it decides, with act, date, rule or number.
-
-Status on 23/11/2026: no participation.
-
-## Artificial intelligence and images
-
-We use artificial intelligence tools to organize information. Final writing, fact-checking and approval are human, by the editor.
-
-Photos are always real and credited. We never use AI-generated images.
-
 ## Corrections and contact
 
 Factual errors are corrected within 24 hours, with notice to readers. To request a correction or reach the newsroom, reply to any edition of the "Jeronimo Molina" newsletter (jeronimomolina.substack.com).
@@ -105,7 +92,3 @@ The editor has been **a member of the Podemos party since May 2026**.
 We say so here and in the piece itself when it deals with the party or its direct opponents. Membership does not ground the analysis: the position comes from the lens and the document, not from the party label. The party may change sides; the editorial line does not change with it.
 
 If a piece's conclusion coincides with the party's position, we check the coincidence against the source before publishing. We do not declare support for candidates or parties in our pieces.
-
-## Who publishes
-
-The brand belongs to J. de Rossi Molina Ltda.

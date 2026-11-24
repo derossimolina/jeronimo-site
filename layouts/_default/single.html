@@ -1,7 +1,7 @@
 {{ define "main" }}
 <article class="bloco artigo">
   <div class="caixa estreita">
-    {{- if .Section }}<p class="rot"><a href="{{ (site.GetPage .Section).RelPermalink }}">{{ (site.GetPage .Section).Title }}</a></p>{{ else }}<p class="rot">{{ .Params.rotulo | default "Jeronimo Molina" }}</p>{{ end }}
+    {{- if .Section }}<p class="rot"><a href="{{ (site.GetPage .Section).RelPermalink }}">{{ (site.GetPage .Section).Title }}</a></p>{{ else }}{{ with .Params.rotulo }}<p class="rot">{{ . }}</p>{{ end }}{{ end }}
     <h1 class="h1-menor">{{ .Title }}</h1>
     {{- if .Date }}{{ if not .Date.IsZero }}<p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>{{ end }}{{ end }}
     {{- if .Params.toc }}{{ with .TableOfContents }}<nav class="indice" aria-label="{{ i18n "nestaPagina" }}"><p class="rot">{{ i18n "nestaPagina" }}</p>{{ . }}</nav>{{ end }}{{ end }}

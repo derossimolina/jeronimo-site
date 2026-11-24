@@ -2,7 +2,6 @@
 title: Sobre
 slug: sobre
 description: "Quem assina, o que a marca publica, a pesquisa por trás dela e como apuramos."
-rotulo: Sobre
 toc: true
 lede: true
 revelar: true
@@ -84,18 +83,6 @@ A marca se financia por **assinantes e anunciantes**. Quando houver outra fonte 
 - **Pauta livre.** O patrocinador não escolhe, revisa nem veta conteúdo editorial, nem recebe tratamento favorável na cobertura.
 - **Conflito de interesses.** Não aceitamos patrocínio de quem seja objeto de cobertura crítica em andamento, sem declarar o vínculo ao leitor.
 
-## Entidades de classe
-
-Participação do responsável editorial em entidade de classe é declarada aqui e, quando a entidade ou um associado dela for assunto de uma peça, na própria peça. A participação não condiciona a cobertura: a entidade é criticada pelo que decide, com ato, data, norma ou número.
-
-Situação em 23/11/2026: nenhuma participação.
-
-## Inteligência artificial e imagens
-
-Usamos ferramentas de inteligência artificial para organizar informação. A redação final, a checagem e a aprovação são humanas, do responsável editorial.
-
-As fotos são sempre reais e creditadas. Nunca usamos imagem gerada por inteligência artificial.
-
 ## Correções e contato
 
 Erro factual é corrigido em até 24 horas, com aviso ao leitor. Para pedir uma correção ou falar com a redação, responda a qualquer edição da newsletter "Jeronimo Molina" (jeronimomolina.substack.com).
@@ -107,7 +94,3 @@ O responsável editorial é **filiado ao Podemos desde maio de 2026**.
 Dizemos isso aqui e na própria peça, quando ela tratar do partido ou de seus adversários diretos. A filiação não embasa a análise: a posição vem da lente e do documento, não da legenda. O partido pode mudar de lado; a linha não muda com ele.
 
 Se a conclusão de uma peça coincidir com a posição do partido, conferimos a coincidência contra a fonte antes de publicar. Não declaramos apoio a candidatos nem a partidos nas peças.
-
-## Quem publica
-
-A marca é da J. de Rossi Molina Ltda.

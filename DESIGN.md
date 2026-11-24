@@ -31,6 +31,9 @@ Brief de design deste site. A fonte de verdade visual é o design system da marc
 | 24/11/2026 | Sai a linha de versão ("Versão 1, de 23/11/2026...") e a frase de vigência da página | Não faz sentido para quem lê |
 | 24/11/2026 | Texto da página Sobre justificado (com hifenização), na mesma coluna, e cada bloco aparece ao chegar à tela (opacidade e 16 px, 400 ms, uma vez); sem JS ou com movimento reduzido, tudo visível | Pedido da pessoa responsável |
 | 24/11/2026 | Artigos publicados em cards empilhados (`data/publicacoes.yaml`, shortcode `publicacoes`): o card clicado sobe e mostra autoria, periódico, DOI, citação ABNT e link; botão com `aria-expanded`; sem JS, lista aberta | Só os 3 artigos em periódico confirmados (Hoplos 2024, Gestão.org 2024, RBGI 2022); o Google Scholar bloqueou a consulta automática, os dados vêm do Crossref, do OpenAlex e das revistas |
+| 24/11/2026 | Artigos passam a ser capas em leque, no mesmo modelo das capas de relatório; a capa escolhida sobe para a frente e os detalhes aparecem abaixo (o primeiro já vem aberto) | Referência enviada pela pessoa responsável |
+| 24/11/2026 | Saem da página Sobre "Entidades de classe", "Inteligência artificial e imagens" e "Quem publica"; saem os rótulos acima do título da Sobre e da hero | Pedido da pessoa responsável |
+| 24/11/2026 | Índice "Nesta página" sem caixa: lista numerada (mono, no acento) em duas colunas, entre linhas finas | Pedido para deixar o menu mais interessante |
 | 24/11/2026 | Tema claro por botão no cabeçalho, escuro como padrão | Escolha da pessoa responsável |
 | 24/11/2026 | Versão em inglês de interface, home e Sobre (tradução em rascunho); análises, vídeos e episódios continuam em português | Escolha da pessoa responsável |
 

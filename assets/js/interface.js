@@ -38,25 +38,22 @@
   }
 })();
 
-// Cards empilhados dos artigos: o card clicado sobe e mostra os detalhes; um aberto por vez.
+// Artigos em capas: a capa clicada sobe para a frente e os detalhes dela aparecem abaixo do leque.
 (function () {
-  var pilha = document.querySelector('[data-pilha]');
-  if (!pilha) return;
-  pilha.classList.add('pilha-ativa');
+  var leque = document.querySelector('[data-leque]');
+  if (!leque) return;
+  leque.classList.add('leque-ativo');
   var ajuda = document.querySelector('[data-so-js]');
   if (ajuda) ajuda.hidden = false;
-  var botoes = pilha.querySelectorAll('.artigo-botao');
-  var abrir = function (alvo) {
-    botoes.forEach(function (b) {
-      var aberto = b === alvo && b.getAttribute('aria-expanded') !== 'true';
-      b.setAttribute('aria-expanded', String(aberto));
-      b.closest('.pilha-item').classList.toggle('aberta', aberto);
-      document.getElementById(b.getAttribute('aria-controls')).inert = !aberto;
+  var capas = leque.querySelectorAll('.leque-capa');
+  var mostrar = function (alvo) {
+    capas.forEach(function (c) {
+      var sim = c === alvo;
+      c.setAttribute('aria-expanded', String(sim));
+      c.classList.toggle('ativa', sim);
+      document.getElementById(c.getAttribute('aria-controls')).hidden = !sim;
     });
   };
-  botoes.forEach(function (b) {
-    b.setAttribute('aria-expanded', 'false');
-    document.getElementById(b.getAttribute('aria-controls')).inert = true;
-    b.addEventListener('click', function () { abrir(b); });
-  });
+  capas.forEach(function (c) { c.addEventListener('click', function () { mostrar(c); }); });
+  mostrar(capas[0]); // o primeiro artigo já aparece aberto
 })();

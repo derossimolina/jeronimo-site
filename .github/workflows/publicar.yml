@@ -23,11 +23,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: true
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -51,19 +51,16 @@ jobs:
             git push origin HEAD:main
           fi
 
-  publicar:
+  gerar:
+    # Gera o site e envia o pacote. Separado do deploy, como no modelo oficial do GitHub Pages:
+    # quando os dois ficavam no mesmo job, o deploy às vezes não achava o pacote recém-enviado.
     needs: replicar
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main            # pega também o conteúdo que o job anterior acabou de gravar
           persist-credentials: false
@@ -76,9 +73,20 @@ jobs:
       - name: Gerar o site
         run: hugo --minify --gc
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: public
 
+  publicar:
+    needs: gerar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

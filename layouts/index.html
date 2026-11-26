@@ -1,9 +1,12 @@
 {{ define "main" }}
 {{- /* O conteúdo replicado só existe em português; a versão em inglês lista as mesmas páginas. */}}
-{{- $pt := .Sites.Default }}
+{{- $pt := hugo.Sites.Default }}
 {{- $news := (where $pt.RegularPages "Section" "newsletter").ByDate.Reverse }}
 {{- $pod := (where $pt.RegularPages "Section" "podcast").ByDate.Reverse }}
 {{- $vid := (where $pt.RegularPages "Section" "videos").ByDate.Reverse }}
+{{- /* As capas de relatório mostram as análises; enquanto não houver nenhuma, mostram a newsletter. */}}
+{{- $rel := (where $pt.RegularPages "Section" "analises").ByDate.Reverse }}
+{{- if not $rel }}{{ $rel = $news }}{{ end }}
 {{- $emPt := "" }}{{ with i18n "emPortugues" }}{{ $emPt = . }}{{ end }}
 
 {{- /* Cena WebGL (Three.js): fundo fixo que muda de forma conforme a seção. Sem WebGL, sem JS ou com
@@ -30,13 +33,13 @@
     </div>
     <div class="faco-grade">
       <div class="capas" data-capas>
-        {{- range $i, $p := first 3 $news }}
+        {{- range $i, $p := first 3 $rel }}
         <a class="capa-link" href="{{ $p.RelPermalink }}" aria-label="{{ i18n "relatorio" }}: {{ $p.Title }}"{{ with $emPt }} hreflang="pt-BR"{{ end }}>{{ partial "capa-relatorio.html" (dict "p" $p "n" (add $i 1)) }}</a>
         {{- else }}
         {{ partial "vazio.html" (dict "texto" (i18n "semRelatorio") "link" (i18n "assineNewsletter") "url" site.Params.newsletter) }}
         {{- end }}
       </div>
-      {{ partial "terminal.html" (dict "posts" (first 3 $news)) }}
+      {{ partial "terminal.html" (dict "posts" (first 3 $rel)) }}
     </div>
   </div>
 </section>
@@ -45,7 +48,7 @@
   <div class="caixa">
     <div class="secao-topo surgir">
       <p class="rot">{{ i18n "newsletter" }}</p>
-      <h2 id="news-titulo">{{ i18n "ultimasAnalises" }}</h2>{{ with $emPt }}<p class="dado">{{ . }}</p>{{ end }}
+      <h2 id="news-titulo">{{ i18n "ultimasEdicoes" }}</h2>{{ with $emPt }}<p class="dado">{{ . }}</p>{{ end }}
     </div>
     {{- with $news }}
     {{- $d := index . 0 }}
@@ -74,7 +77,7 @@
       {{- end }}
     </ul>
     {{- end }}
-    <p class="ver-todas"><a class="txt" href="{{ "/newsletter/" | relLangURL }}">{{ i18n "verTodasAnalises" }}</a></p>
+    <p class="ver-todas"><a class="txt" href="{{ "/newsletter/" | relLangURL }}">{{ i18n "verTodasEdicoes" }}</a></p>
     {{- else }}
     {{ partial "vazio.html" (dict "texto" (i18n "semAnalise") "link" (i18n "assineNewsletter") "url" site.Params.newsletter) }}
     {{- end }}

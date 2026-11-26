@@ -1,7 +1,7 @@
 {{- /* Item de lista no estilo de portfólio: título, tipo e ano na mesma linha, resumo curto abaixo. Contexto: dict page. */ -}}
 {{- $p := .page }}
 {{- $n := .nivel | default 3 }}
-{{- $rot := cond (eq $p.Section "podcast") "Podcast" (cond (eq $p.Section "videos") "Vídeo" "Newsletter") }}
+{{- $rot := cond (eq $p.Section "podcast") "Podcast" (cond (eq $p.Section "videos") "Vídeo" (cond (eq $p.Section "analises") ($p.Params.tema | default "Análise") "Newsletter")) }}
 <article class="trabalho">
   <div class="trabalho-topo">
     <h{{ $n }}><a class="cartao-link" href="{{ $p.RelPermalink }}"{{ if ne site.Language.Lang "pt" }} hreflang="pt-BR" lang="pt-BR"{{ end }}>{{ $p.Title }}</a></h{{ $n }}>

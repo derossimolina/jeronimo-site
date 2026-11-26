@@ -1,0 +1,26 @@
+{{ define "main" }}
+<article class="bloco artigo">
+  <div class="caixa estreita">
+    <p class="rot">{{ with .Params.tema }}{{ . }}{{ else }}<a href="{{ "/analises/" | relLangURL }}">{{ i18n "analises" }}</a>{{ end }}</p>
+    <h1 class="h1-menor">{{ .Title }}</h1>
+    <p class="dado meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time>
+      {{- with .Params.secao }} · <a href="{{ "/analises/" | relLangURL }}">{{ index hugo.Data.escalas.secao . }}</a>{{ end }}
+      {{- with .Params.atualizado_em }} · {{ i18n "atualizadoEm" }} <time datetime="{{ . }}">{{ time.Format "02/01/2006" . }}</time>{{ end }}
+    </p>
+    {{- with .Params.resumo }}<p class="lede ficha-resumo">{{ . }}</p>{{ end }}
+    {{ partial "ficha.html" . }}
+    {{- with .Content }}
+    <h2 class="ficha-corpo-titulo" id="a-analise">{{ i18n "analiseCompleta" }}</h2>
+    <div class="prosa">{{ . }}</div>
+    {{- end }}
+    {{- with .Params.correcoes }}
+    <section class="ficha-bloco correcoes" aria-labelledby="correcoes-t">
+      <h2 id="correcoes-t" class="rot">{{ i18n "correcoes" }}</h2>
+      <ul>{{ range . }}<li><time class="dado" datetime="{{ .data }}">{{ time.Format "02/01/2006" .data }}</time> {{ .texto | markdownify }}</li>{{ end }}</ul>
+    </section>
+    {{- end }}
+  </div>
+</article>
+{{ partial "jsonld-artigo.html" . }}
+{{ end }}

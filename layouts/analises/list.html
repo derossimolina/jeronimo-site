@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{- /* Lista das análises com filtro por seção e por tema. Sem JS, aparece a lista completa e o filtro fica oculto. */}}
+{{- $paginas := .Pages }}
+{{- if ne site.Language.Lang "pt" }}{{ with hugo.Sites.Default.GetPage .Path }}{{ $paginas = .Pages }}{{ end }}{{ end }}
+{{- $paginas = $paginas.ByDate.Reverse }}
+{{- $esc := hugo.Data.escalas }}
+<section class="bloco">
+  <div class="caixa">
+    <p class="rot">{{ .Title }}</p>
+    <h1 class="h1-menor">{{ with .Params.titulo_pagina }}{{ . }}{{ else }}{{ .Title }}{{ end }}</h1>
+    {{ with .Content }}<div class="prosa lede coluna">{{ . }}</div>{{ end }}
+    {{- if $paginas }}
+    {{- $temas := slice }}{{ range $paginas }}{{ with .Params.tema }}{{ $temas = $temas | append . }}{{ end }}{{ end }}
+    <div class="filtro" data-filtro hidden>
+      <p class="rot">{{ i18n "analisesFiltro" }}</p>
+      <div class="filtro-grupo" role="group" aria-label="{{ i18n "secoes" }}">
+        <button class="chip" type="button" aria-pressed="true" data-chave="secao" data-valor="">{{ i18n "todas" }}</button>
+        {{- range $k, $v := $esc.secao }}
+        <button class="chip" type="button" aria-pressed="false" data-chave="secao" data-valor="{{ $k }}">{{ $v }}</button>
+        {{- end }}
+      </div>
+      {{- with $temas | uniq | sort }}{{ if gt (len .) 1 }}
+      <div class="filtro-grupo" role="group" aria-label="{{ i18n "temas" }}">
+        <button class="chip" type="button" aria-pressed="true" data-chave="tema" data-valor="">{{ i18n "todas" }}</button>
+        {{- range . }}
+        <button class="chip" type="button" aria-pressed="false" data-chave="tema" data-valor="{{ . | urlize }}">{{ . }}</button>
+        {{- end }}
+      </div>
+      {{- end }}{{ end }}
+      <p class="dado" data-contagem aria-live="polite"></p>
+    </div>
+    <div class="coluna" data-lista>
+      {{- range $paginas }}
+      <div data-secao="{{ .Params.secao }}" data-tema="{{ .Params.tema | urlize }}">{{ partial "trabalho.html" (dict "page" . "nivel" 2) }}</div>
+      {{- end }}
+      <p class="vazio" data-sem-resultado hidden>{{ i18n "nenhumaNoFiltro" }}</p>
+    </div>
+    {{- $js := resources.Get "js/analises.js" | resources.Minify | resources.Fingerprint }}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+    {{- else }}
+    {{ partial "vazio.html" (dict "texto" .Params.vazio "link" .Params.vazio_link "url" (.Params.vazio_url | relLangURL)) }}
+    {{- end }}
+  </div>
+</section>
+{{ end }}

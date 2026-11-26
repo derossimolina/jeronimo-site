@@ -12,16 +12,14 @@ timeZone = "America/Sao_Paulo"
 
 [languages]
   [languages.pt]
-    languageCode = "pt-BR"
-    languageName = "Português"
+    label = "Português"
     locale = "pt-BR"
     weight = 1
     [languages.pt.params]
       description = "Análise política com fato, fonte e posição. Newsletter, podcast e vídeos de Jerônimo de Rossi Molina."
       tagline = "Análise política com fato, fonte e posição."
   [languages.en]
-    languageCode = "en"
-    languageName = "English"
+    label = "English"
     locale = "en"
     weight = 2
     [languages.en.params]
@@ -40,6 +38,7 @@ timeZone = "America/Sao_Paulo"
   endLevel = 2
 
 [permalinks.page]
+  analises = "/analises/:slug/"
   newsletter = "/newsletter/:slug/"
   podcast = "/podcast/:slug/"
   videos = "/videos/:slug/"

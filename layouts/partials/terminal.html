@@ -21,7 +21,7 @@
 {{- /**/ -}}
 <span class="t-linha t-saida">  [3/3] posição ...... declarada no título   <span class="t-ok">✓</span></span>
 {{- /**/ -}}
-<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">publicar --newsletter</span></span>
+<span class="t-linha" data-cmd>{{ $prompt | safeHTML }}<span class="t-cmd">publicar --{{ cond (eq (index $posts 0).Section "analises") "analises" "newsletter" }}</span></span>
 {{- /**/ -}}
 <span class="t-linha t-saida">  <span class="t-ok">✓</span> publicado: “{{ (index $posts 0).Title }}”</span>
 {{- else -}}

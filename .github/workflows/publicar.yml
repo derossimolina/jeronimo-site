@@ -35,7 +35,9 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Testes
-        run: python3 tests/testa_sincronizar.py
+        run: |
+          python3 tests/testa_sincronizar.py
+          python3 tests/testa_importar.py
 
       - name: Replicar newsletter, podcast e vídeos
         run: python3 ferramentas/sincronizar.py

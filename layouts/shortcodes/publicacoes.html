@@ -1,7 +1,7 @@
 {{- /* Artigos publicados (data/publicacoes.yaml) como capas em leque, no modelo das capas de relatório.
        Cada capa é um botão: o card clicado sobe para a frente e os detalhes aparecem abaixo do leque.
        Sem JS, o leque fica aberto e todos os detalhes aparecem em lista. */ -}}
-{{- $artigos := site.Data.publicacoes }}
+{{- $artigos := hugo.Data.publicacoes }}
 <div class="artigos">
   <h3 class="artigos-titulo">{{ i18n "artigosTitulo" }}</h3>
   <p class="artigos-ajuda" data-so-js hidden>{{ i18n "artigosAjuda" }}</p>

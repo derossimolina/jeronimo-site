@@ -36,6 +36,9 @@ Brief de design deste site. A fonte de verdade visual é o design system da marc
 | 24/11/2026 | Índice "Nesta página" sem caixa: lista numerada (mono, no acento) em duas colunas, entre linhas finas | Pedido para deixar o menu mais interessante |
 | 24/11/2026 | Tema claro por botão no cabeçalho, escuro como padrão | Escolha da pessoa responsável |
 | 24/11/2026 | Versão em inglês de interface, home e Sobre (tradução em rascunho); análises, vídeos e episódios continuam em português | Escolha da pessoa responsável |
+| 26/11/2026 | Nova seção Análises (`/analises/`), escrita no Obsidian e importada por script, com ficha técnica acima do texto (fato com fonte e data, leitura, probabilidade e horizonte em faixa do Guia de Marca, o que observar, quem é afetado, correções); filtro por seção e tema; a Newsletter fica como coluna | Separar método (Análises) de posição semanal (Newsletter), a pedido da pessoa responsável |
+| 26/11/2026 | Menu: Análises, Newsletter, Podcast, Vídeos, Sobre. As capas de relatório da home mostram as análises (enquanto não houver, a newsletter) | Análises como porta principal |
+| 26/11/2026 | Sobre reescrita em terceira pessoa: acadêmico, consultor e lado declarado (pró-mercado, lente liberal-progressista); duas citações com autoria e fonte (McCloskey, 2016; Merquior, 2014, p. 80), sem retratos; contato `contato@jeronimo.caxias.br`; a filiação mantém o texto aprovado | Pedido da pessoa responsável; citações conferidas na fonte, sem imagem de licença incerta |
 
 ## Perguntas em aberto
 

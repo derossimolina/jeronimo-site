@@ -44,14 +44,37 @@ UA = "Mozilla/5.0 (compatible; jeronimo-site-sync/1.0; +https://jeronimo.caxias.
 
 
 # ------------------------------------------------------------------ rede
+class _SoHttpsRedirect(urllib.request.HTTPRedirectHandler):
+    """Bloqueia redirecionamento que faça downgrade de https:// para outro esquema."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if urllib.parse.urlparse(newurl).scheme.lower() != "https":
+            raise RuntimeError(f"redirecionamento fora de https bloqueado: {newurl}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = urllib.request.build_opener(_SoHttpsRedirect)
+
+
+def url_https(url):
+    """Retorna a URL limpa se for https:// válida (sem espaços/controle); caso contrário, string vazia."""
+    u = (url or "").strip()
+    if not u or any(ord(c) < 32 or c.isspace() for c in u):
+        return ""
+    p = urllib.parse.urlparse(u)
+    if p.scheme.lower() != "https" or not p.netloc:
+        return ""
+    return u
+
+
 def baixa(url, tentativas=3):
-    if urllib.parse.urlparse(url).scheme != "https":
+    if not url_https(url):
         raise RuntimeError(f"{url}: só https é aceito")
     ultimo = None
     for _ in range(tentativas):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "pt-BR,pt;q=0.9"})
-            with urllib.request.urlopen(req, timeout=40) as r:
+            with _OPENER.open(req, timeout=40) as r:
                 dados = r.read(LIMITE_BYTES + 1)
             if len(dados) > LIMITE_BYTES:
                 raise RuntimeError("resposta maior que o limite")
@@ -142,13 +165,16 @@ def itens_rss(xml):
 def monta_post(i, marca, tipo):
     corpo = limpa_html(i["corpo"] or i["descricao"])
     desc = resumo(i["descricao"]) or resumo(corpo)
-    slug = slugify(i["link"].rstrip("/").rsplit("/", 1)[-1] if "/p/" in i["link"] else i["titulo"])
+    origem = url_https(i["link"])
+    imagem = url_https(i["imagem"])
+    audio = url_https(i["audio"])
+    slug = slugify(origem.rstrip("/").rsplit("/", 1)[-1] if "/p/" in origem else i["titulo"])
     fm = {"title": i["titulo"], "date": i["data"].strftime("%Y-%m-%dT%H:%M:%S+00:00") if i["data"] else None,
-          "slug": slug, "description": desc, "marca": marca, "origem": i["link"]}
-    if i["imagem"]:
-        fm["imagem"] = i["imagem"]
+          "slug": slug, "description": desc, "marca": marca, "origem": origem}
+    if imagem:
+        fm["imagem"] = imagem
     if tipo == "podcast":
-        fm["audio"] = i["audio"]
+        fm["audio"] = audio
         if i["duracao"]:
             fm["duracao"] = i["duracao"]
     fm = {k: v for k, v in fm.items() if v not in (None, "")}
@@ -165,7 +191,7 @@ def sync_substack(cfg, xml_por_host, rel):
             for i in itens_rss(xml):
                 if n >= cfg.get("max_itens", 60) or not i["titulo"]:
                     break
-                tipo = "podcast" if i["audio"] else "newsletter"
+                tipo = "podcast" if url_https(i["audio"]) else "newsletter"
                 nome, fm, corpo = monta_post(i, fonte["marca"], tipo)
                 escreve(CONTEUDO / tipo, nome, fm, corpo, rel)
                 n += 1
@@ -181,7 +207,7 @@ def sync_podcasts(cfg, baixa_url, rel):
             xml = baixa_url(fonte["url"])
             n = 0
             for i in itens_rss(xml):
-                if n >= cfg.get("max_itens", 60) or not i["titulo"] or not i["audio"]:
+                if n >= cfg.get("max_itens", 60) or not i["titulo"] or not url_https(i["audio"]):
                     continue
                 nome, fm, corpo = monta_post(i, fonte.get("marca", "jeronimo"), "podcast")
                 escreve(CONTEUDO / "podcast", nome, fm, corpo, rel)

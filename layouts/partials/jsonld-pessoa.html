@@ -1,0 +1,5 @@
+{{- /* JSON-LD Person e Organization na página Sobre: dado para buscadores, não é script executável. */ -}}
+{{- $redes := slice }}{{ range hugo.Data.redes }}{{ $redes = $redes | append .url }}{{ end }}
+{{- $pessoa := dict "@type" "Person" "@id" (printf "%s#pessoa" ("/sobre/" | absURL)) "name" "Jerônimo de Rossi Molina" "jobTitle" "Analista de risco político" "description" .Description "url" ("/sobre/" | absURL) "email" "mailto:contato@jeronimo.caxias.br" "sameAs" $redes "knowsAbout" (slice "Risco político" "Análise política" "Política fiscal" "Administração pública") }}
+{{- $org := dict "@type" "Organization" "name" site.Title "legalName" "J. de Rossi Molina Ltda" "url" site.BaseURL "founder" (dict "@id" (index $pessoa "@id")) }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" (slice $pessoa $org) | jsonify | safeJS }}</script>

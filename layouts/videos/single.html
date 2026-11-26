@@ -5,9 +5,9 @@
     <h1 class="h1-menor">{{ .Title }}</h1>
     <p class="dado meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
     {{- with .Params.youtube }}
-    <div class="video" data-id="{{ . }}">
+    <div class="video" data-id="{{ . }}" data-titulo="{{ i18n "iframeVideo" }}">
       <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener noreferrer" class="video-capa">
-        <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="{{ i18n "capaVideo" }} {{ $.Title }}" width="480" height="360" loading="lazy">
+        <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="{{ i18n "capaVideo" }} {{ $.Title }}" width="480" height="360" loading="lazy" referrerpolicy="no-referrer">
         <span class="video-play">{{ i18n "assistir" }}</span>
       </a>
     </div>

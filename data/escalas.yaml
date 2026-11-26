@@ -1,0 +1,18 @@
+# Escalas da ficha técnica das análises (Guia de Marca, "Como lemos o risco").
+# Usadas pelo ferramentas/importar_analises.py (validação) e por layouts/partials/ficha.html (texto exibido).
+# A chave é o valor que vai no front matter; `nome` e `faixa` são o que o leitor vê.
+probabilidade:
+  muito-baixa: {nome: "Muito baixa", faixa: "até 10%"}
+  baixa:       {nome: "Baixa", faixa: "10 a 30%"}
+  media:       {nome: "Média", faixa: "30 a 60%"}
+  alta:        {nome: "Alta", faixa: "60 a 85%"}
+  muito-alta:  {nome: "Muito alta", faixa: "acima de 85%"}
+
+horizonte:
+  imediato: {nome: "Imediato", faixa: "até 30 dias"}
+  curto:    {nome: "Curto", faixa: "1 a 6 meses"}
+  medio:    {nome: "Médio", faixa: "6 a 24 meses"}
+
+secao:
+  risco-e-negocios: "Risco e negócios"
+  politica: "Política"

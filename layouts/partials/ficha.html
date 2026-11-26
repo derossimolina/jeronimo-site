@@ -1,0 +1,52 @@
+{{- /* Ficha técnica da análise, acima do texto. Só aparece quando os campos existem (posts antigos ficam sem). */ -}}
+{{- $p := .Params }}
+{{- if or $p.fatos $p.leitura $p.probabilidade }}
+{{- $esc := hugo.Data.escalas }}
+<div class="ficha" role="group" aria-label="{{ i18n "fichaTitulo" }}">
+  {{- with $p.fatos }}
+  <section class="ficha-bloco" aria-labelledby="f-fatos">
+    <h2 id="f-fatos" class="rot">{{ i18n "oQueAconteceu" }}</h2>
+    <ol class="fatos">
+      {{- range . }}
+      <li>
+        <p>{{ .texto | markdownify }}</p>
+        <p class="dado fonte">{{ i18n "fonte" }}: <a href="{{ .url }}" rel="noopener">{{ .fonte }}</a>, <time datetime="{{ .data }}">{{ time.Format "02/01/2006" .data }}</time></p>
+      </li>
+      {{- end }}
+    </ol>
+  </section>
+  {{- end }}
+  {{- with $p.leitura }}
+  <section class="ficha-bloco" aria-labelledby="f-leitura">
+    <h2 id="f-leitura" class="rot">{{ i18n "minhaLeitura" }}</h2>
+    <div class="prosa">{{ . | markdownify }}</div>
+  </section>
+  {{- end }}
+  {{- if or $p.probabilidade $p.horizonte }}
+  <section class="ficha-bloco" aria-labelledby="f-prob">
+    <h2 id="f-prob" class="rot">{{ i18n "probHorizonte" }}</h2>
+    <dl class="ficha-escala">
+      {{- with index $esc.probabilidade ($p.probabilidade | default "") }}
+      <div><dt class="dado">{{ i18n "probabilidade" }}</dt><dd><strong>{{ .nome }}</strong> <span class="dado">({{ .faixa }})</span></dd></div>
+      {{- end }}
+      {{- with index $esc.horizonte ($p.horizonte | default "") }}
+      <div><dt class="dado">{{ i18n "horizonte" }}</dt><dd><strong>{{ .nome }}</strong> <span class="dado">({{ .faixa }})</span></dd></div>
+      {{- end }}
+    </dl>
+    {{- with $p.probabilidade_texto }}<div class="prosa">{{ . | markdownify }}</div>{{ end }}
+  </section>
+  {{- end }}
+  {{- with $p.sinais }}
+  <section class="ficha-bloco" aria-labelledby="f-sinais">
+    <h2 id="f-sinais" class="rot">{{ i18n "oQueObservar" }}</h2>
+    <ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  </section>
+  {{- end }}
+  {{- with $p.afetados }}
+  <section class="ficha-bloco" aria-labelledby="f-afetados">
+    <h2 id="f-afetados" class="rot">{{ i18n "quemAfetado" }}</h2>
+    <ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+  </section>
+  {{- end }}
+</div>
+{{- end }}

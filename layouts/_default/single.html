@@ -9,4 +9,5 @@
     {{- with .Params.origem }}<p class="origem dado">{{ i18n "publicadoEm" }} <a href="{{ . }}" rel="noopener">{{ . | replaceRE "^https?://" "" }}</a></p>{{ end }}
   </div>
 </article>
+{{- with .File }}{{ if eq .ContentBaseName "sobre" }}{{ partial "jsonld-pessoa.html" $ }}{{ end }}{{ end }}
 {{ end }}

@@ -1,10 +1,15 @@
 <header class="topo">
   <div class="caixa topo-in">
     <a class="marca" href="{{ "/" | relLangURL }}" aria-label="jeronimo molina, {{ i18n "inicio" }}">{{ partial "lockup.html" . }}</a>
-    <nav class="menu" aria-label="{{ i18n "menuPrincipal" }}">
+    {{- /* Botão do menu: só no celular e só com JS (sem JS, o menu aparece aberto como no desktop). */}}
+    <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-botao data-abrir="{{ i18n "abrirMenu" }}" data-fechar="{{ i18n "fecharMenu" }}" aria-label="{{ i18n "abrirMenu" }}">
+      <svg class="ico ico-abrir" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg class="ico ico-fechar" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <nav class="menu" id="menu-principal" aria-label="{{ i18n "menuPrincipal" }}">
       {{- $atual := . }}
       {{- $base := "" }}{{ with .File }}{{ $base = .ContentBaseName }}{{ end }}
-      {{- range slice (dict "t" (i18n "newsletter") "u" "/newsletter/" "s" "newsletter") (dict "t" (i18n "podcast") "u" "/podcast/" "s" "podcast") (dict "t" (i18n "videos") "u" "/videos/" "s" "videos") (dict "t" (i18n "sobre") "u" (cond (eq site.Language.Lang "en") "/about/" "/sobre/") "s" "sobre") }}
+      {{- range slice (dict "t" (i18n "analises") "u" "/analises/" "s" "analises") (dict "t" (i18n "newsletter") "u" "/newsletter/" "s" "newsletter") (dict "t" (i18n "podcast") "u" "/podcast/" "s" "podcast") (dict "t" (i18n "videos") "u" "/videos/" "s" "videos") (dict "t" (i18n "sobre") "u" (cond (eq site.Language.Lang "en") "/about/" "/sobre/") "s" "sobre") }}
       <a href="{{ .u | relLangURL }}"{{ if or (eq $atual.Section .s) (eq $base .s) }} aria-current="page"{{ end }}>{{ .t }}</a>
       {{- end }}
     </nav>

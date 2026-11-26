@@ -6,7 +6,7 @@
     {{ with .Content }}<div class="prosa lede">{{ . }}</div>{{ end }}
     {{- /* Na versão em inglês, a seção lista as páginas em português (o conteúdo só existe nesse idioma). */}}
 {{- $paginas := .Pages }}
-{{- if ne site.Language.Lang "pt" }}{{ with $.Sites.Default.GetPage .Path }}{{ $paginas = .Pages }}{{ end }}{{ end }}
+{{- if ne site.Language.Lang "pt" }}{{ with hugo.Sites.Default.GetPage .Path }}{{ $paginas = .Pages }}{{ end }}{{ end }}
 {{- $pag := .Paginate $paginas }}
     {{- if $pag.Pages }}
     <div class="coluna">{{ range $pag.Pages }}{{ partial "trabalho.html" (dict "page" . "nivel" 2) }}{{ end }}</div>

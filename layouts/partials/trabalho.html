@@ -9,6 +9,6 @@
   </div>
   {{- with $p.Description }}<p class="resumo">{{ . }}</p>{{ end }}
   {{- if and (eq $p.Section "videos") $p.Params.youtube }}
-  <img class="miniatura" src="https://i.ytimg.com/vi/{{ $p.Params.youtube }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+  <img class="miniatura" src="https://i.ytimg.com/vi/{{ $p.Params.youtube }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360" referrerpolicy="no-referrer">
   {{- end }}
 </article>

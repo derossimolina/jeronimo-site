@@ -15,7 +15,9 @@
       if (ok) n++;
     });
     vazio.hidden = n !== 0;
-    contagem.textContent = n === 1 ? '1 análise' : n + ' análises';
+    var sing = contagem.dataset.singular || 'análise';
+    var plur = contagem.dataset.plural || 'análises';
+    contagem.textContent = n + ' ' + (n === 1 ? sing : plur);
   }
   caixa.addEventListener('click', function (e) {
     var b = e.target.closest('button[data-chave]');

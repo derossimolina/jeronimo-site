@@ -27,7 +27,7 @@
         {{- end }}
       </div>
       {{- end }}{{ end }}
-      <p class="dado" data-contagem aria-live="polite"></p>
+      <p class="dado" data-contagem data-singular="{{ i18n "analiseSingular" }}" data-plural="{{ i18n "analisePlural" }}" aria-live="polite"></p>
     </div>
     <div class="coluna" data-lista>
       {{- range $paginas }}

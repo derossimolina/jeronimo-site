@@ -72,7 +72,7 @@ document.querySelectorAll('.video').forEach((v) => {
     e.preventDefault();
     const f = document.createElement('iframe');
     f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-    f.title = 'Vídeo';
+    f.title = v.dataset.titulo || 'Vídeo';
     f.allow = 'autoplay; encrypted-media; picture-in-picture';
     f.referrerPolicy = 'strict-origin-when-cross-origin';
     f.allowFullscreen = true;
@@ -87,7 +87,7 @@ document.querySelectorAll('.spotify').forEach((s) => {
     e.preventDefault();
     const f = document.createElement('iframe');
     f.src = `https://open.spotify.com/embed/show/${id}`;
-    f.title = 'Podcast no Spotify';
+    f.title = s.dataset.titulo || 'Podcast no Spotify';
     f.allow = 'encrypted-media';
     f.loading = 'lazy';
     s.replaceChildren(f);

@@ -6,7 +6,7 @@ document.querySelectorAll('.video').forEach(function (v) {
     e.preventDefault();
     var f = document.createElement('iframe');
     f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
-    f.title = 'Vídeo';
+    f.title = v.dataset.titulo || 'Vídeo';
     f.allow = 'autoplay; encrypted-media; picture-in-picture';
     f.referrerPolicy = 'strict-origin-when-cross-origin';
     f.allowFullscreen = true;

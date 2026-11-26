@@ -20,9 +20,12 @@ assert "https://ok.com" in limpo and "<p>fim</p>" in limpo and "p.gif" not in li
 # 1b. vetores que a versão anterior deixava passar
 assert "//evil" not in limpa_html('<a href="//evil.example/x">a</a>'), "link protocol-relative"
 assert "<img" not in limpa_html('<img src="httpx:foo">') and "<img" not in limpa_html('<img src="data:image/png;base64,AA">')
+assert "<img" not in limpa_html('<img src="http://inseguro.example/a.jpg">'), "imagem http deve ser descartada"
 assert "{{" not in limpa_html("{{< ref \"x\" >}} {{% y %}}"), "shortcode do Hugo"
 assert "<script" not in limpa_html('<svg><script>alert(1)</script></svg>')
 assert "<style" not in limpa_html("<style>a{}</style>texto")
+assert "app-store-redirect" not in limpa_html('<div class="app-marketing-banner">Baixe o app</div><a href="https://substack.com/app/app-store-redirect?x=1">App</a><p>fim</p>')
+assert "<a" not in limpa_html('<a href="https://ok.com">   </a><p>fim</p>'), "link vazio deve ser removido"
 # elemento descartado aninhado e mal fechado não pode engolir o resto do post
 assert limpa_html("<form><div>x<form>y</div>z</form><p>resto</p>").endswith("<p>resto</p>")
 # tags permitidas abertas e nunca fechadas não vazam para o layout
@@ -45,14 +48,26 @@ s.escreve(tmp, "c.md", {"title": "Outro"}, "x", rel)
 s.escreve(tmp, "d.md", {"title": "Outro"}, "x", rel)
 assert rel["ignorados"] == 3 and "texto meu" in (tmp / "b.md").read_text(encoding="utf-8"), rel
 
-# 3. só https e leitura dos feeds de teste, sem tocar em content/
-for url in ("http://x.com/feed", "file:///etc/passwd"):
+# 3. só https (inclusive em redirects e front matter) e leitura dos feeds de teste, sem tocar em content/
+for url in ("http://x.com/feed", "file:///etc/passwd", "https://x.com/a b"):
     try:
         s.baixa(url)
     except RuntimeError:
         pass
     else:
         raise AssertionError(f"baixa aceitou {url}")
+try:
+    s._SoHttpsRedirect().redirect_request(None, None, 302, "Found", {}, "http://downgrade.example/feed")
+except RuntimeError:
+    pass
+else:
+    raise AssertionError("redirect para http foi aceito")
+_, fm_seg, _ = s.monta_post(
+    {"titulo": "Teste", "link": "javascript:alert(1)", "data": None, "descricao": "d", "corpo": "<p>ok</p>",
+     "imagem": "http://inseguro.example/i.jpg", "audio": "http://inseguro.example/a.mp3", "duracao": ""},
+    "jeronimo", "podcast",
+)
+assert "origem" not in fm_seg and "imagem" not in fm_seg and "audio" not in fm_seg, fm_seg
 saida = Path(tempfile.mkdtemp())
 r = subprocess.run([sys.executable, str(RAIZ / "ferramentas" / "sincronizar.py"), "--offline", str(RAIZ / "tests" / "fixtures"),
                     "--saida", str(saida)], capture_output=True, text=True)

@@ -54,7 +54,7 @@
     {{- $d := index . 0 }}
     <article class="news-destaque surgir">
       <div class="news-midia revelar-img" aria-hidden="true">
-        {{- with $d.Params.imagem }}<img src="{{ . }}" alt="" width="1024" height="576" loading="lazy" decoding="async">{{ else }}{{ partial "capa-relatorio.html" (dict "p" $d "n" 1 "larga" true) }}{{ end }}
+        {{- with $d.Params.imagem }}<img src="{{ . }}" alt="" width="1024" height="576" loading="lazy" decoding="async" referrerpolicy="no-referrer">{{ else }}{{ partial "capa-relatorio.html" (dict "p" $d "n" 1 "larga" true) }}{{ end }}
       </div>
       <div class="news-texto">
         <p class="dado"><time datetime="{{ $d.Date.Format "2006-01-02" }}">{{ $d.Date.Format "02/01/2006" }}</time></p>
@@ -68,7 +68,7 @@
       <li class="surgir">
         <article class="news-cartao">
           <div class="news-midia revelar-img" aria-hidden="true">
-            {{- with .Params.imagem }}<img src="{{ . }}" alt="" width="640" height="360" loading="lazy" decoding="async">{{ else }}{{ partial "capa-relatorio.html" (dict "p" . "n" 0 "larga" true) }}{{ end }}
+            {{- with .Params.imagem }}<img src="{{ . }}" alt="" width="640" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">{{ else }}{{ partial "capa-relatorio.html" (dict "p" . "n" 0 "larga" true) }}{{ end }}
           </div>
           <p class="dado"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02/01/2006" }}</time></p>
           <h3><a class="cartao-link" href="{{ .RelPermalink }}"{{ with $emPt }} hreflang="pt-BR" lang="pt-BR"{{ end }}>{{ .Title }}</a></h3>
@@ -96,9 +96,9 @@
       <li class="surgir">
         <article class="video-cartao">
           {{- with .Params.youtube }}
-          <div class="video" data-id="{{ . }}">
+          <div class="video" data-id="{{ . }}" data-titulo="{{ i18n "iframeVideo" }}">
             <a href="https://www.youtube.com/watch?v={{ . }}" rel="noopener noreferrer" class="video-capa">
-              <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
+              <img src="https://i.ytimg.com/vi/{{ . }}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
               <span class="video-play">{{ i18n "assistir" }}<span class="sr">{{ i18n "aoVideo" }}</span></span>
             </a>
           </div>
@@ -140,7 +140,7 @@
       {{- else }}
       <div class="podcast-show">
         <p class="lede">{{ i18n "episodiosSpotify" }}</p>
-        <div class="spotify" data-show="{{ site.Params.spotifyShow }}">
+        <div class="spotify" data-show="{{ site.Params.spotifyShow }}" data-titulo="{{ i18n "iframeSpotify" }}">
           <a class="btn btn-sec" href="https://open.spotify.com/show/{{ site.Params.spotifyShow }}" rel="noopener">{{ i18n "ouvirSpotify" }}</a>
           <p class="peq texto-3">{{ i18n "avisoSpotify" }}</p>
         </div>
